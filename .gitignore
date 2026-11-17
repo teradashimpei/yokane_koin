@@ -7,3 +7,6 @@ node_modules/
 .next/
 *.log
 .DS_Store
+frontend/AGENTS.md
+*.tsbuildinfo
+.next-build/
