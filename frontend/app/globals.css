@@ -68,3 +68,16 @@ textarea.inp { min-height: 90px; resize: vertical; }
 .login .form { display: flex; align-items: center; justify-content: center; padding: 48px; }
 .preview { border: 1px solid var(--line); border-radius: 12px; padding: 20px; background: #fff; }
 .qcard { font-size: 16px; line-height: 1.8; }
+.chip.tab { background: var(--white); border-color: var(--line); }
+.b-new { background: var(--err-bg); color: var(--err); }
+.b-replied { background: var(--warn-bg); color: var(--warn); }
+.wait-row { display: flex; gap: 16px; align-items: center; padding: 16px 0; }
+.wait-row + .wait-row { border-top: 1px solid var(--line); }
+.today { background: var(--pale); border-radius: 8px; padding: 16px; }
+.head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.head h2 { margin: 0; } .head .sp { flex: 1; } .head a { color: var(--primary); font-weight: 700; }
+.count { background: var(--pale); color: var(--primary); border-radius: 6px; padding: 1px 8px; font-size: 12px; font-weight: 700; }
+.list th { white-space: nowrap; }
+.btn { display: inline-block; text-align: center; white-space: nowrap; }
+.today { display: flex; flex-direction: column; gap: 6px; }
+.today .btn { margin-top: 6px; }

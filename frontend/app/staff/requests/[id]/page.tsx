@@ -40,34 +40,34 @@ export default function RequestDetail({ params }: { params: Promise<{ id: string
     try { const x = await api<Detail>(`staff/requests/${id}/${path}`, { method: "POST", body }); setD(x); setMsg(done); setMode(""); }
     catch (e: any) { setErr(e.message); } finally { setBusy(false); }
   };
-  const reply = () => send("reply", { proposals: slots.map((s) => ({ starts_at: `${s.date}T${s.time}:00`, method: s.method, place: s.place })) }, "返事を送りました。お客さんが日にちを選ぶと「予定」に入ります。");
+  const reply = () => send("reply", { proposals: slots.map((s) => ({ starts_at: `${s.date}T${s.time}:00`, method: s.method, place: s.place })) }, "返事を送りました。お客さまが日にちを選ぶと「予定」に入ります。");
   return (
     <div className="stack">
       <Link href="/staff" className="muted">← 届いた希望に戻る</Link>
       <div className="row" style={{ alignItems: "center" }}>
-        <h1 style={{ margin: 0, flex: "none" }}>{r.requester_name}さんからの希望</h1>
+        <h1 style={{ margin: 0, flex: "none" }}>{r.requester_name}様からの希望</h1>
         <div style={{ flex: "none" }}><span className={`badge b-${r.status}`}>{STATUS_LABEL[r.status]}</span>{r.overdue && <> <span className="badge b-over">返事の目安を過ぎた</span></>}</div>
       </div>
       {msg && <div className="okmsg">{msg}</div>}
       <div className="row" style={{ alignItems: "flex-start" }}>
         <div className="card stack">
-          <h2>お客さんのこと</h2>
+          <h2>お客さまのこと</h2>
           <div><label className="f">聞いてみたいこと</label>{r.ask_topics.length ? r.ask_topics.map((t) => <div key={t}>・{t}</div>) : "—"}</div>
           <div><label className="f">先に聞きたいこと</label>{r.pre_question || "—"}</div>
           <div><label className="f">都合のいい時間帯・会い方</label>{r.preferences.join("・")} ／ {METHOD_LABEL[r.meeting_method]}</div>
           <div>
-            <label className="f">考えの近さ・お客さんの考え（12問から）</label>
+            <label className="f">考えの近さ・お客さまの考え（12問から）</label>
             {r.result ? (<>
               <div><b>3つの軸のうち {r.result.same_levels} つがあなたと同じ</b></div>
               {r.result.texts.map((t) => <div key={t}>・{t}</div>)}
-            </>) : <span className="muted">お客さんが「考えを見せてよい」にしていないので表示しません</span>}
+            </>) : <span className="muted">お客さまが「考えを見せてよい」にしていないので表示しません</span>}
           </div>
           <div className="muted">届いた日 {fmtDate(r.created_at)}</div>
         </div>
         <div className="card stack">
           <h2>返事</h2>
           {canReply && mode === "" && (<>
-            <p className="muted" style={{ margin: 0 }}>話せる日にちを3つまで出せます。お客さんが1つ選ぶと決まります。</p>
+            <p className="muted" style={{ margin: 0 }}>話せる日にちを3つまで出せます。お客さまが1つ選ぶと決まります。</p>
             {slots.map((s, i) => (
               <div key={i} className="row" style={{ gap: 8 }}>
                 <select className="inp" value={s.date} onChange={(e) => setSlots(slots.map((x, j) => j === i ? { ...x, date: e.target.value } : x))}>
@@ -89,13 +89,13 @@ export default function RequestDetail({ params }: { params: Promise<{ id: string
             </div>
           </>)}
           {canReply && mode === "decline" && (<>
-            <p style={{ margin: 0 }}>理由を選んでください（お客さんには「今回は難しそうです」とだけ伝わります）</p>
+            <p style={{ margin: 0 }}>理由を選んでください（お客さまには「今回は難しそうです」とだけ伝わります）</p>
             <div className="btns">{d.decline_reasons.map((x) => <button key={x} className="btn sub" disabled={busy} onClick={() => send("decline", { reason: x }, "見送りました。")}>{x}</button>)}</div>
             <button className="btn ghost" onClick={() => setMode("")}>やめる</button>
           </>)}
           {r.proposals.length > 0 && (
             <div><label className="f">出した日にち</label>
-              {r.proposals.map((p) => <div key={p.id}>{p.chosen ? "✔ " : "・"}{fmtDate(p.starts_at)}〜 {METHOD_LABEL[p.method]}{p.place && `（${p.place}）`}{p.chosen && <b>（お客さんが選んだ）</b>}</div>)}
+              {r.proposals.map((p) => <div key={p.id}>{p.chosen ? "✔ " : "・"}{fmtDate(p.starts_at)}〜 {METHOD_LABEL[p.method]}{p.place && `（${p.place}）`}{p.chosen && <b>（お客さまが選んだ）</b>}</div>)}
             </div>
           )}
           {r.status === "declined" && <div className="muted">見送った理由：{r.decline_reason}</div>}

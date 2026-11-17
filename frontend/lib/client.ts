@@ -20,7 +20,7 @@ export async function api<T = any>(path: string, opts: { method?: string; body?:
 }
 
 export const STATUS_LABEL: Record<string, string> = {
-  new: "新着", replied: "返事した", scheduled: "日にちが決まった", done: "終わった", declined: "見送った",
+  new: "返事が必要", replied: "お客さまの返事待ち", scheduled: "予定あり", done: "終わった", declined: "見送った",
 };
 export const METHOD_LABEL: Record<string, string> = { online: "オンライン", in_person: "会って話す" };
 
@@ -30,4 +30,10 @@ export function fmtDate(iso: string | null | undefined, withTime = true): string
   const w = "日月火水木金土"[d.getDay()];
   const md = `${d.getMonth() + 1}/${d.getDate()}（${w}）`;
   return withTime ? `${md} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}` : md;
+}
+
+export function fmtWait(h: number | null | undefined): string {
+  if (h === null || h === undefined) return "—";
+  if (h < 1) return "1時間以内";
+  return h >= 24 ? `${Math.floor(h / 24)}日${h % 24 ? `${h % 24}時間` : ""}` : `${h}時間`;
 }

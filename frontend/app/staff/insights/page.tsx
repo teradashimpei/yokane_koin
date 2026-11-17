@@ -17,7 +17,7 @@ function Bars({ items }: { items: Count[] }) {
   ))}</div>;
 }
 
-// P6 お客さんの傾向(集計)。自分宛ての申し込みだけ。5人そろうまでは出さない
+// P6 お客さまの傾向(集計)。自分宛ての申し込みだけ。5人そろうまでは出さない
 export default function Insights() {
   const [d, setD] = useState<Data | null>(null); const [err, setErr] = useState("");
   useEffect(() => { api<Data>("staff/insights").then(setD).catch((e) => setErr(e.message)); }, []);
@@ -25,7 +25,7 @@ export default function Insights() {
   if (!d) return <p className="muted">読み込んでいます…</p>;
   return (
     <div className="stack">
-      <h1>お客さんの傾向</h1>
+      <h1>お客さまの傾向</h1>
       <p className="lead">あなたに「話を聞いてみたい」と送ってくれた人の傾向です。一人ひとりが分からない形でまとめています。</p>
       {!d.enough ? <div className="card">いま {d.total} 人です。{d.min_people} 人そろうと表示します。</div> : (<>
         <div className="row">

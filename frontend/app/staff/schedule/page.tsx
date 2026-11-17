@@ -30,7 +30,7 @@ function Schedule() {
   const cur = items.find((i) => i.request_id === sel);
   const now = new Date();
   const save = async () => {
-    try { await api(`staff/requests/${sel}/record`, { method: "PUT", body: rec }); setMsg("保存しました。この記録は「お客さんの傾向」に数えられます（メモは数えません）。"); load(); }
+    try { await api(`staff/requests/${sel}/record`, { method: "PUT", body: rec }); setMsg("保存しました。この記録は「お客さまの傾向」に数えられます（メモは数えません）。"); load(); }
     catch (e: any) { setErr(e.message); }
   };
   return (
@@ -42,15 +42,15 @@ function Schedule() {
           {items.map((i) => (
             <button key={i.request_id} onClick={() => setSel(i.request_id)} className="card" style={{ width: "100%", textAlign: "left", cursor: "pointer", borderColor: sel === i.request_id ? "var(--sky)" : undefined, background: sel === i.request_id ? "var(--pale)" : undefined }}>
               <div className="muted">{fmtDate(i.starts_at)}〜{new Date(i.starts_at) < now ? "（終わった）" : ""}</div>
-              <b>{i.requester_name}さん</b>　{i.pre_question || i.ask_topics[0] || ""}
+              <b>{i.requester_name}様</b>　{i.pre_question || i.ask_topics[0] || ""}
               <div className="muted">{METHOD_LABEL[i.method]}{i.place && `（${i.place}）`}　{i.recorded ? "記録あり" : "記録まだ"}</div>
             </button>
           ))}
         </div>
         <div className="card stack">
           {cur ? (<>
-            <h2>話したあとのメモ：{cur.requester_name}さん</h2>
-            <p className="muted" style={{ margin: 0 }}>お客さんには見えません。次に話すときの自分のためのメモです。</p>
+            <h2>話したあとのメモ：{cur.requester_name}様</h2>
+            <p className="muted" style={{ margin: 0 }}>お客さまには見えません。次に話すときの自分のためのメモです。</p>
             <div><label className="f">話せましたか</label>
               <div className="chips">{[true, false].map((v) => <button key={String(v)} className={rec.held === v ? "chip on" : "chip"} onClick={() => setRec({ ...rec, held: v, next_promise: v ? rec.next_promise : false })}>{v ? "話せた" : "話せなかった"}</button>)}</div>
             </div>

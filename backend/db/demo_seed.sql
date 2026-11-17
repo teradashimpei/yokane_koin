@@ -128,7 +128,7 @@ INSERT INTO diagnosis_axis_scores (diagnosis_id,axis_id,score,level) VALUES (5,1
 INSERT INTO diagnosis_axis_scores (diagnosis_id,axis_id,score,level) VALUES (5,2,-3,-1);
 INSERT INTO diagnosis_axis_scores (diagnosis_id,axis_id,score,level) VALUES (5,3,0,0);
 INSERT INTO meeting_requests (id,visitor_id,user_id,speaker_id,diagnosis_id,preferences,meeting_method,ask_topics,pre_question,requester_name,created_at,status,replied_at,decline_reason,share_result) VALUES (5,'aaaaaaaa-0000-4000-8000-000000000005',5,1,5,'["いつでもよい"]','in_person','["もっと他の事例も聞いてみたい", "資産運用に興味があるが、何から始めればいいか"]','貯金がこのままでいいのか不安です','さき',DATE_SUB(NOW(),INTERVAL 72 HOUR),'scheduled',DATE_SUB(NOW(),INTERVAL 52 HOUR),NULL,1);
-INSERT INTO meeting_proposals (request_id,starts_at,ends_at,method,place,chosen_at) VALUES (5,TIMESTAMP(DATE_ADD(CURDATE(),INTERVAL 1 DAY),'19:00:00'),TIMESTAMP(DATE_ADD(CURDATE(),INTERVAL 1 DAY),'19:30:00'),'in_person','博多駅前',DATE_SUB(NOW(),INTERVAL 10 HOUR));
+INSERT INTO meeting_proposals (request_id,starts_at,ends_at,method,place,chosen_at) VALUES (5,DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 2 HOUR),'%Y-%m-%d %H:00:00'),DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 2 HOUR),'%Y-%m-%d %H:30:00'),'in_person','博多駅前',DATE_SUB(NOW(),INTERVAL 10 HOUR));
 INSERT INTO users (id,google_sub,email) VALUES (6,'demo-sub-6','demo6@example.com');
 INSERT INTO visitors (id,user_id,cohort) VALUES ('aaaaaaaa-0000-4000-8000-000000000006',6,'demo');
 INSERT INTO diagnoses (id,visitor_id,status,pattern,completed_at) VALUES (6,'aaaaaaaa-0000-4000-8000-000000000006','completed','00-',DATE_SUB(NOW(),INTERVAL 91 HOUR));
@@ -136,7 +136,7 @@ INSERT INTO diagnosis_axis_scores (diagnosis_id,axis_id,score,level) VALUES (6,1
 INSERT INTO diagnosis_axis_scores (diagnosis_id,axis_id,score,level) VALUES (6,2,0,0);
 INSERT INTO diagnosis_axis_scores (diagnosis_id,axis_id,score,level) VALUES (6,3,-3,-1);
 INSERT INTO meeting_requests (id,visitor_id,user_id,speaker_id,diagnosis_id,preferences,meeting_method,ask_topics,pre_question,requester_name,created_at,status,replied_at,decline_reason,share_result) VALUES (6,'aaaaaaaa-0000-4000-8000-000000000006',6,1,6,'["いつでもよい"]','online','["もっと他の事例も聞いてみたい", "資産運用に興味があるが、何から始めればいいか"]','共働きの貯め方を知りたい','りょう',DATE_SUB(NOW(),INTERVAL 90 HOUR),'scheduled',DATE_SUB(NOW(),INTERVAL 70 HOUR),NULL,0);
-INSERT INTO meeting_proposals (request_id,starts_at,ends_at,method,place,chosen_at) VALUES (6,TIMESTAMP(DATE_ADD(CURDATE(),INTERVAL 4 DAY),'19:00:00'),TIMESTAMP(DATE_ADD(CURDATE(),INTERVAL 4 DAY),'19:30:00'),'online',NULL,DATE_SUB(NOW(),INTERVAL 10 HOUR));
+INSERT INTO meeting_proposals (request_id,starts_at,ends_at,method,place,chosen_at) VALUES (6,TIMESTAMP(DATE_ADD(CURDATE(),INTERVAL -2 DAY),'19:00:00'),TIMESTAMP(DATE_ADD(CURDATE(),INTERVAL -2 DAY),'19:30:00'),'online',NULL,DATE_SUB(NOW(),INTERVAL 10 HOUR));
 INSERT INTO users (id,google_sub,email) VALUES (7,'demo-sub-7','demo7@example.com');
 INSERT INTO visitors (id,user_id,cohort) VALUES ('aaaaaaaa-0000-4000-8000-000000000007',7,'demo');
 INSERT INTO diagnoses (id,visitor_id,status,pattern,completed_at) VALUES (7,'aaaaaaaa-0000-4000-8000-000000000007','completed','++0',DATE_SUB(NOW(),INTERVAL 201 HOUR));

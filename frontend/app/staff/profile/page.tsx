@@ -7,7 +7,7 @@ type Ep = { id: number; title: string; body: string; status: string };
 type Me = { profile: any; tags: Tag[]; tag_range: Record<string, [number, number]>; episodes: Ep[]; value_tags: (string | null)[] };
 const FIELDS: [string, string, boolean][] = [["area", "担当エリア", false], ["job_title", "業務担当", false], ["intro_text", "自己紹介", true], ["personality_text", "人柄・休日", true]];
 
-// P5 プロフィール(お客さんからの見え方つき)
+// P5 プロフィール(お客さまからの見え方つき)
 export default function Profile() {
   const [me, setMe] = useState<Me | null>(null);
   const [f, setF] = useState<any>(null);
@@ -22,7 +22,7 @@ export default function Profile() {
   const toggleHide = (k: string) => setF({ ...f, hidden_fields: hidden.includes(k) ? hidden.filter((x) => x !== k) : [...hidden, k] });
   const save = async () => {
     setErr(""); setMsg("");
-    try { apply(await api<Me>("staff/me/profile", { method: "PUT", body: { ...f, tag_ids: tagIds } })); setMsg("保存しました。お客さん側の画面に反映されます。"); }
+    try { apply(await api<Me>("staff/me/profile", { method: "PUT", body: { ...f, tag_ids: tagIds } })); setMsg("保存しました。お客さま側の画面に反映されます。"); }
     catch (e) { const x = e as ApiError; setErr(x.message); }
   };
   const saveEp = async (ep: Ep) => {
@@ -38,7 +38,7 @@ export default function Profile() {
       {msg && <div className="okmsg">{msg}</div>}{err && <div className="err">{err}</div>}
       <div className="row" style={{ alignItems: "flex-start" }}>
         <div className="card stack" style={{ flex: 1.8 }}>
-          <div><label className="f">名前（お客さんに見える名前）</label><input className="inp" value={f.name} maxLength={50} onChange={(e) => setF({ ...f, name: e.target.value })} /></div>
+          <div><label className="f">名前（お客さまに見える名前）</label><input className="inp" value={f.name} maxLength={50} onChange={(e) => setF({ ...f, name: e.target.value })} /></div>
           <div><label className="f">ひと言（一覧に出る）</label><input className="inp" value={f.one_liner ?? ""} maxLength={100} onChange={(e) => setF({ ...f, one_liner: e.target.value })} /></div>
           {FIELDS.map(([k, label, long]) => (
             <div key={k}><label className="f">{label}</label>
@@ -66,7 +66,7 @@ export default function Profile() {
           ))}
         </div>
         <div className="stack" style={{ position: "sticky", top: 24 }}>
-          <b>お客さんからの見え方</b>
+          <b>お客さまからの見え方</b>
           <div className="preview stack">
             <div className="row" style={{ alignItems: "center" }}>
               <div className="avatar" style={{ flex: "none", width: 56, height: 56, fontSize: 22 }}>{f.name.slice(0, 1)}</div>
@@ -76,10 +76,10 @@ export default function Profile() {
             {f.one_liner && <div>「{f.one_liner}」</div>}
             {FIELDS.filter(([k]) => !hidden.includes(k) && f[k]).map(([k, label]) => <div key={k}><div className="muted">{label}</div>{f[k]}</div>)}
             {!hidden.includes("private_tags") && <div className="chips">{picked("private").map((t) => <span key={t.id} className="chip">{t.name}</span>)}</div>}
-            <div className="note">まずは聞くだけでも大丈夫。決めるのはお客さんです</div>
+            <div className="note">まずは聞くだけでも大丈夫。決めるのはお客さまです</div>
             {!f.accepting && <div className="err">いまは新しい希望を受けていません（一覧に出ません）</div>}
           </div>
-          <p className="muted">「見せない」にした項目は、お客さんには表示されません。年齢は出しません。</p>
+          <p className="muted">「見せない」にした項目は、お客さまには表示されません。年齢は出しません。</p>
         </div>
       </div>
     </div>

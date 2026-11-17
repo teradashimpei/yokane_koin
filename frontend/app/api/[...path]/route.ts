@@ -4,7 +4,7 @@ import { callBackend } from "@/lib/backend";
 import { COOKIE, readToken } from "@/lib/session";
 
 // BFF: 画面から /api/staff/... /api/admin/... を受け、/v1/... に中継する。ほかの道は通さない
-const ALLOWED = /^(staff\/(me(\/profile|\/answers|\/episodes(\/\d+)?)?|questions|requests(\/\d+(\/(reply|decline|record))?)?|schedule|insights|session)|admin\/(export|episodes(\/\d+\/publish)?))$/;
+const ALLOWED = /^(staff\/(me(\/profile|\/answers|\/episodes(\/\d+)?)?|questions|requests(\/\d+(\/(reply|decline|record))?)?|schedule|insights|session|home)|admin\/(export|episodes(\/\d+\/publish)?))$/;
 
 async function relay(req: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
   const path = (await ctx.params).path.join("/");

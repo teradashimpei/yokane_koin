@@ -19,8 +19,8 @@ export default function Login() {
     <div className="login">
       <div className="hero">
         <h1 style={{ fontSize: 40, margin: 0 }}>よかね</h1>
-        <p style={{ fontSize: 18, fontWeight: 700 }}>話し手のページ</p>
-        <p style={{ opacity: .85 }}>お客さんから届いた「話を聞いてみたい」に返事をしたり、プロフィールを整えたりできます。</p>
+        <p style={{ fontSize: 18, fontWeight: 700 }}>行員用のページ</p>
+        <p style={{ opacity: .85 }}>お客さまから届いた「話を聞いてみたい」に返事をしたり、プロフィールを整えたりできます。</p>
       </div>
       <div className="form">
         <form onSubmit={submit} className="stack" style={{ width: 380 }}>

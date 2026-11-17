@@ -8,7 +8,7 @@ const MENU = [
   { href: "/staff", label: "ホーム" },
   { href: "/staff/requests", label: "届いた希望", match: "/staff/requests" },
   { href: "/staff/schedule", label: "予定" },
-  { href: "/staff/insights", label: "お客さんの傾向" },
+  { href: "/staff/insights", label: "お客さまの傾向" },
   { href: "/staff/profile", label: "プロフィール" },
   { href: "/staff/answers", label: "12問の答え" },
 ];
@@ -22,7 +22,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="shell">
       <aside className="side">
-        <div className="logo"><b>よかね</b><span>話し手用</span></div>
+        <div className="logo"><b>よかね</b><span>行員用</span></div>
         <nav>
           {MENU.map((m) => <Link key={m.href} href={m.href} className={active(m) ? "item on" : "item"}>{m.label}</Link>)}
           {me?.role === "admin" && <Link href="/staff/admin" className={path === "/staff/admin" ? "item on" : "item"}>運営</Link>}

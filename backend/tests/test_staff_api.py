@@ -110,3 +110,12 @@ def test_admin_export(client):
     r = client.get("/v1/admin/export", headers=staff(ADMIN))
     assert r.status_code == 200 and "request_id" in r.text
     assert "ゆう" not in r.text and "次は家計簿" not in r.text and "@example.com" not in r.text
+
+
+def test_home_today(client):
+    h = client.get("/v1/staff/home", headers=staff(OTA)).json()
+    assert [w["requester_name"] for w in h["waiting"]] == ["あや", "まい", "ゆう"]  # 待っている時間が長い順
+    assert h["waiting"][0]["overdue"] and h["waiting"][0]["waiting_hours"] >= 48
+    assert len(h["today"]) == 1 and len(h["to_record"]) == 1 and not h["to_record"][0]["recorded"]
+    assert set(h["month"]) == {"requests", "held", "next_promise"}
+    assert client.get("/v1/staff/home", headers=staff(ADMIN)).status_code == 403

@@ -38,6 +38,7 @@ def _row(r, target_days: int, now: datetime) -> dict:
         "created_at": iso(r["created_at"]),
         "status": r["status"],
         "overdue": r["status"] == "new" and r["created_at"] < now - timedelta(days=target_days),
+        "waiting_hours": int((now - r["created_at"]).total_seconds() // 3600) if r["status"] == "new" else None,
     }
 
 
@@ -233,3 +234,29 @@ def record(request_id: int, body: RecordBody, staff: Staff = Depends(require_spe
     log_staff_event(db, staff.id, "record", request_id)
     db.commit()
     return detail(request_id, staff, db)
+
+
+@router.get("/v1/staff/home")
+def home(staff: Staff = Depends(require_speaker), db: Connection = Depends(get_db)):
+    """P2 ホーム(今日やること)。返事が必要な希望(待っている時間が長い順)、今日と次の予定、
+    記録がまだの面談、今月の数字だけを返す。全件の一覧は /v1/staff/requests(P2-2)。"""
+    days, now = int(get_setting(db, "staff_reply_target_days", 2)), _now(db)
+    rows = db.execute(text(_BASE + " AND mr.status = 'new' ORDER BY mr.created_at, mr.id"), {"s": staff.speaker_id}).mappings().all()
+    waiting = [_row(r, days, now) for r in rows]
+    meets = schedule(staff, db)["items"]
+    today = now.date().isoformat()
+    upcoming = [m for m in meets if m["starts_at"] >= now.replace(microsecond=0).isoformat() + "+09:00"]
+    month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    m = db.execute(text(
+        "SELECT COUNT(*) AS got, SUM(rec.held = TRUE) AS held, SUM(rec.held = TRUE AND rec.next_promise = TRUE) AS promised "
+        "FROM meeting_requests mr LEFT JOIN meeting_records rec ON rec.request_id = mr.id "
+        "WHERE mr.speaker_id = :s AND mr.created_at >= :a AND " + NOT_EXPIRED), {"s": staff.speaker_id, "a": month_start}).mappings().first()
+    return {
+        "now": iso(now),
+        "reply_target_days": days,
+        "waiting": waiting,
+        "today": [x for x in upcoming if x["starts_at"].startswith(today)],
+        "next": next((x for x in upcoming if not x["starts_at"].startswith(today)), None),
+        "to_record": [x for x in meets if x["starts_at"] < now.replace(microsecond=0).isoformat() + "+09:00" and not x["recorded"]],
+        "month": {"requests": int(m["got"] or 0), "held": int(m["held"] or 0), "next_promise": int(m["promised"] or 0)},
+    }

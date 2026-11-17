@@ -5,7 +5,7 @@ import { api } from "@/lib/client";
 type Q = { id: number; question_no: number; episode_text: string; summary: string; source_label: string; answer: number | null };
 const CHOICES: [number, string][] = [[-1, "ちがうかも"], [0, "パス"], [1, "わかる"]];
 
-// B2 話し手も12問に答える(お客さんと同じ質問。答えがマッチングに使われる)
+// B2 話し手も12問に答える(お客さまと同じ質問。答えがマッチングに使われる)
 export default function Answers() {
   const [qs, setQs] = useState<Q[] | null>(null);
   const [ans, setAns] = useState<Record<number, number>>({});
@@ -24,7 +24,7 @@ export default function Answers() {
   if (done) return (
     <div className="stack" style={{ maxWidth: 640 }}>
       <h1>答えを保存しました</h1>
-      <p className="lead">あなたの考えのタグはこうなりました。お客さんの「考えが近い人」の並びに使われます。</p>
+      <p className="lead">あなたの考えのタグはこうなりました。お客さまの「考えが近い人」の並びに使われます。</p>
       <div className="chips">{done.value_tags.filter(Boolean).map((v) => <span key={v!} className="chip on">{v}</span>)}</div>
       <p className="muted">本人の体験と向きが大きく食い違っていないか、プロフィールで確かめてください。</p>
       <div className="btns"><a className="btn" href="/staff/profile">プロフィールへ</a><button className="btn ghost" onClick={() => { setDone(null); setI(0); }}>もう一度答える</button></div>
@@ -33,7 +33,7 @@ export default function Answers() {
   return (
     <div className="stack" style={{ maxWidth: 640 }}>
       <h1>あなたも12問に答えてください</h1>
-      <p className="lead">答えがマッチングに使われます。お客さんと同じ質問です。</p>
+      <p className="lead">答えがマッチングに使われます。お客さまと同じ質問です。</p>
       <div className="muted">{i + 1} / {qs.length}</div>
       <div className="card stack">
         <b>{q.summary}</b>
