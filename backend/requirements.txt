@@ -1,0 +1,11 @@
+# yokane-back と同じ版にそろえる(2026-11-15 時点の固定)
+fastapi==0.163.0
+uvicorn==0.54.0
+gunicorn==27.0.1
+pydantic==2.14.3
+sqlalchemy==2.1.8
+pymysql==1.2.4
+cryptography==50.0.2
+python-dotenv==1.2.4
+pytest==9.2.0
+httpx==0.28.1
