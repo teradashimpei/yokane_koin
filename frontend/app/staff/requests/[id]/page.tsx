@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
-import { api, fmtDate, METHOD_LABEL, STATUS_LABEL } from "@/lib/client";
+import { api, Customer, customerLine, fmtDate, freeTextLabel, METHOD_LABEL, Source, STATUS_LABEL } from "@/lib/client";
+import { Situations, SourceLine } from "@/components/RequestContext";
 
 type Proposal = { id: number; starts_at: string; ends_at: string; method: string; place: string; chosen: boolean };
 type Detail = {
@@ -10,6 +11,8 @@ type Detail = {
     created_at: string; status: string; overdue: boolean; decline_reason: string | null; share_result: boolean;
     result: { texts: string[]; same_levels: number; axes: number } | null; proposals: Proposal[];
     record: { held: boolean; topics: string[]; next_promise: boolean; memo: string } | null;
+    source: Source; customer: Customer;
+    story: { good_text: string; regret_text: string; trigger_title: string; trigger_body: string; hesitation_title: string; hesitation_body: string } | null;
   };
   decline_reasons: string[];
 };
@@ -52,9 +55,25 @@ export default function RequestDetail({ params }: { params: Promise<{ id: string
       <div className="row" style={{ alignItems: "flex-start" }}>
         <div className="card stack">
           <h2>お客さまのこと</h2>
-          <div><label className="f">聞いてみたいこと</label>{r.ask_topics.length ? r.ask_topics.map((t) => <div key={t}>・{t}</div>) : "—"}</div>
-          <div><label className="f">先に聞きたいこと</label>{r.pre_question || "—"}</div>
-          <div><label className="f">都合のいい時間帯・会い方</label>{r.preferences.join("・")} ／ {METHOD_LABEL[r.meeting_method]}</div>
+          <div><label className="f">いまの状況</label>{r.customer.situations.length ? <Situations c={r.customer} max={9} /> : <span className="muted">選んでいません</span>}
+            {customerLine(r.customer) && <div className="muted" style={{ marginTop: 4 }}>{customerLine(r.customer)}</div>}</div>
+          <div><label className="f">どこから来たか</label><SourceLine s={r.source} />
+            {r.story && (
+              <details style={{ marginTop: 6 }}>
+                <summary style={{ cursor: "pointer", color: "var(--primary)" }}>お客さまが読んだ経験談を見る</summary>
+                <div className="story-box" style={{ marginTop: 8 }}>
+                  <h3>やって良かったこと</h3><p>{r.story.good_text}</p>
+                  <h3>後悔していること</h3><p>{r.story.regret_text}</p>
+                  <h3>きっかけ｜{r.story.trigger_title}</h3><p>{r.story.trigger_body}</p>
+                  <h3>迷ったこと｜{r.story.hesitation_title}</h3><p style={{ margin: 0 }}>{r.story.hesitation_body}</p>
+                </div>
+              </details>
+            )}
+            {r.source.route === "graduate_story" && <div className="note" style={{ marginTop: 6 }}>卒業生の話を読んで、考え方の近いあなたに届いた希望です。卒業生の名前はお客さまにも出していません。</div>}
+          </div>
+          {r.ask_topics.length > 0 && <div><label className="f">聞いてみたいこと</label>{r.ask_topics.map((t) => <div key={t}>・{t}</div>)}</div>}
+          <div><label className="f">{freeTextLabel(r.source)}</label>{r.pre_question || "—"}</div>
+          <div><label className="f">都合のいい時間帯・会い方</label>{r.preferences.length ? r.preferences.join("・") : "時間帯の指定なし"} ／ {METHOD_LABEL[r.meeting_method]}</div>
           <div>
             <label className="f">考えの近さ・お客さまの考え（12問から）</label>
             {r.result ? (<>

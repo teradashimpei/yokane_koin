@@ -1,10 +1,11 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { api, fmtDate, fmtWait, METHOD_LABEL } from "@/lib/client";
+import { api, Customer, fmtDate, fmtWait, METHOD_LABEL, Source } from "@/lib/client";
+import { Situations, SourceLine } from "@/components/RequestContext";
 
-type Wait = { id: number; requester_name: string; ask_topics: string[]; pre_question: string; preferences: string[]; meeting_method: string; overdue: boolean; waiting_hours: number };
-type Meet = { request_id: number; requester_name: string; ask_topics: string[]; pre_question: string; starts_at: string; ends_at?: string; method: string; place: string };
+type Wait = { id: number; requester_name: string; ask_topics: string[]; pre_question: string; preferences: string[]; meeting_method: string; overdue: boolean; waiting_hours: number; source: Source; customer: Customer };
+type Meet = { request_id: number; requester_name: string; ask_topics: string[]; pre_question: string; starts_at: string; ends_at?: string; method: string; place: string; source?: Source; customer?: Customer };
 type Home = { now: string; reply_target_days: number; waiting: Wait[]; today: Meet[]; next: Meet | null; to_record: Meet[]; month: { requests: number; held: number; next_promise: number } };
 
 const hm = (iso: string) => { const d = new Date(iso); return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`; };
@@ -35,9 +36,10 @@ export default function HomePage() {
           {d.waiting.map((w) => (
             <div key={w.id} className="wait-row">
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div><b style={{ fontSize: 16 }}>{w.requester_name}様</b>{w.overdue && <> <span className="badge b-over">目安の{d.reply_target_days}日を過ぎています</span></>}</div>
+                <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}><b style={{ fontSize: 16 }}>{w.requester_name}様</b><Situations c={w.customer} />{w.overdue && <span className="badge b-over">目安の{d.reply_target_days}日を過ぎています</span>}</div>
                 <div>{w.pre_question || w.ask_topics.join(" / ")}</div>
-                <div className="muted" style={{ color: w.overdue ? "var(--err)" : undefined }}>{w.preferences.join("・")}・{METHOD_LABEL[w.meeting_method]}　／　届いてから {fmtWait(w.waiting_hours)}</div>
+                <SourceLine s={w.source} />
+                <div className="muted" style={{ color: w.overdue ? "var(--err)" : undefined }}>{[...w.preferences, METHOD_LABEL[w.meeting_method]].join("・")}　／　届いてから {fmtWait(w.waiting_hours)}</div>
               </div>
               <Link className="btn" href={`/staff/requests/${w.id}`}>返事する</Link>
             </div>
@@ -50,6 +52,7 @@ export default function HomePage() {
             <div key={m.request_id} className="today">
               <div style={{ color: "var(--primary)", fontSize: 20, fontWeight: 700 }}>{hm(m.starts_at)}{m.ends_at ? ` – ${hm(m.ends_at)}` : ""}</div>
               <b style={{ fontSize: 16 }}>{m.requester_name}様　{METHOD_LABEL[m.method]}{m.place && `（${m.place}）`}</b>
+              {m.customer && <Situations c={m.customer} />}
               {(m.pre_question || m.ask_topics.length > 0) && <><div className="muted" style={{ fontWeight: 700 }}>先に聞きたいこと</div><div>{m.pre_question || m.ask_topics.join(" / ")}</div></>}
               <Link className="btn sub" style={{ alignSelf: "flex-start" }} href={`/staff/requests/${m.request_id}`}>お客さまの考えを見て準備する</Link>
             </div>

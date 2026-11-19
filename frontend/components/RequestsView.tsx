@@ -18,7 +18,8 @@ export default function RequestsView() {
     if (!data) return [];
     const word = q.trim();
     const rows = data.requests.filter((r) => (tab === "all" || r.status === tab) &&
-      (!word || r.requester_name.includes(word) || r.pre_question.includes(word) || r.ask_topics.some((t) => t.includes(word))));
+      (!word || r.requester_name.includes(word) || r.pre_question.includes(word) || r.ask_topics.some((t) => t.includes(word)) ||
+        r.customer.situations.some((t) => t.includes(word)) || (r.source.headline ?? "").includes(word)));
     const rank = (r: Req) => (r.status === "new" ? 0 : 1);
     return [...rows].sort((a, b) => sort === "new" ? b.created_at.localeCompare(a.created_at)
       : rank(a) - rank(b) || a.created_at.localeCompare(b.created_at) * (rank(a) === 0 ? 1 : -1));
@@ -30,7 +31,7 @@ export default function RequestsView() {
     <div className="stack">
       <div className="row" style={{ alignItems: "center" }}>
         <div><h1>届いた希望</h1><p className="lead" style={{ margin: 0 }}>お客さまから届いた「話を聞いてみたい」の一覧です。行を押すと詳細と返事の画面に進みます。</p></div>
-        <input className="inp" style={{ flex: "none", width: 320 }} placeholder="名前・聞きたいことで探す" value={q} onChange={(e) => setQ(e.target.value)} />
+        <input className="inp" style={{ flex: "none", width: 320 }} placeholder="名前・聞きたいこと・状況で探す" value={q} onChange={(e) => setQ(e.target.value)} />
       </div>
       <div className="row" style={{ alignItems: "center" }}>
         <div className="chips" style={{ flex: 1 }}>

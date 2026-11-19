@@ -1,9 +1,10 @@
 "use client";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { api, fmtDate, METHOD_LABEL } from "@/lib/client";
+import { api, Customer, fmtDate, METHOD_LABEL, Source } from "@/lib/client";
+import { Situations, SourceLine } from "@/components/RequestContext";
 
-type Item = { request_id: number; requester_name: string; ask_topics: string[]; pre_question: string; status: string; starts_at: string; method: string; place: string; recorded: boolean };
+type Item = { request_id: number; requester_name: string; ask_topics: string[]; pre_question: string; status: string; starts_at: string; method: string; place: string; recorded: boolean; source: Source; customer: Customer };
 type Rec = { held: boolean; topics: string[]; next_promise: boolean; memo: string };
 
 // P4 予定と話したあとのメモ
@@ -42,7 +43,9 @@ function Schedule() {
           {items.map((i) => (
             <button key={i.request_id} onClick={() => setSel(i.request_id)} className="card" style={{ width: "100%", textAlign: "left", cursor: "pointer", borderColor: sel === i.request_id ? "var(--sky)" : undefined, background: sel === i.request_id ? "var(--pale)" : undefined }}>
               <div className="muted">{fmtDate(i.starts_at)}〜{new Date(i.starts_at) < now ? "（終わった）" : ""}</div>
-              <b>{i.requester_name}様</b>　{i.pre_question || i.ask_topics[0] || ""}
+              <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}><b>{i.requester_name}様</b><Situations c={i.customer} max={2} /></div>
+              <div>{i.pre_question || i.ask_topics[0] || ""}</div>
+              <SourceLine s={i.source} />
               <div className="muted">{METHOD_LABEL[i.method]}{i.place && `（${i.place}）`}　{i.recorded ? "記録あり" : "記録まだ"}</div>
             </button>
           ))}

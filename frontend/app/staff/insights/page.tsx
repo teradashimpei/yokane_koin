@@ -5,6 +5,7 @@ import { api } from "@/lib/client";
 type Count = { label: string; count: number };
 type Data = { enough: boolean; total: number; min_people: number; replied?: number; held?: number; next_promise?: number;
   ask_topics?: Count[]; talked_topics?: Count[]; preferences?: Count[]; shared_count?: number;
+  situations?: Count[]; routes?: Count[]; age_bands?: Count[];
   axes?: { code: string; levels: { level: number; label: string; count: number }[] }[] | null };
 const AXIS_NAME: Record<string, string> = { L: "暮らし方", C: "決め方", M: "お金" };
 const pct = (a: number, b: number) => (b ? Math.round((a / b) * 100) : 0);
@@ -34,6 +35,13 @@ export default function Insights() {
           <div className="card stat"><div className="k">次も話す約束</div><div className="v">{d.next_promise}人</div><div className="muted">会った人の{pct(d.next_promise!, d.held!)}%</div></div>
         </div>
         <div className="row" style={{ alignItems: "stretch" }}>
+          <div className="card"><h2>いまの状況（お客さまが選んだもの）</h2><Bars items={d.situations!} /></div>
+          <div className="card stack"><h2>どこから来たか</h2><Bars items={d.routes!} />
+            <p className="muted" style={{ margin: 0 }}>「卒業生の経験談から」は、卒業生の話を読んで、考え方の近いあなたを選んだ人です。</p>
+            <div><b>年代</b><div className="chips" style={{ marginTop: 6 }}>{d.age_bands!.map((a) => <span key={a.label} className="chip">{a.label} <b>{a.count}人</b></span>)}</div></div>
+          </div>
+        </div>
+        <div className="row" style={{ alignItems: "stretch" }}>
           <div className="card stack">
             <h2>考えの傾向（12問の答えから）</h2>
             {d.axes ? d.axes.map((a) => {
@@ -51,7 +59,7 @@ export default function Insights() {
           <div className="card"><h2>話したテーマ</h2><Bars items={d.talked_topics!} /></div>
         </div>
       </>)}
-      <p className="muted">集計は{d.min_people}人以上そろってから表示します。名前・連絡先・メモは集計に含めません。</p>
+      <p className="muted">集計は{d.min_people}人以上そろってから表示します。名前・連絡先・メモ・年収は集計に含めません。</p>
     </div>
   );
 }
