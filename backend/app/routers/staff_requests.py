@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel, Field, field_validator
-from sqlalchemy import Connection, text
+from sqlalchemy import Connection, bindparam, text
 
 from app.db import get_db
 from app.deps import Staff, log_staff_event, require_speaker
@@ -22,12 +22,13 @@ STATUSES = ("new", "replied", "scheduled", "done", "declined")
 NOT_EXPIRED = "(mr.expires_at IS NULL OR mr.expires_at > CURRENT_TIMESTAMP(3))"
 _BASE = (
     "SELECT mr.id, mr.requester_name, mr.preferences, mr.meeting_method, mr.ask_topics, mr.pre_question, "
-    "mr.created_at, mr.status, mr.replied_at, mr.decline_reason, mr.share_result, mr.diagnosis_id "
+    "mr.created_at, mr.status, mr.replied_at, mr.decline_reason, mr.share_result, mr.diagnosis_id, mr.story_id, mr.user_id "
     "FROM meeting_requests mr WHERE mr.speaker_id = :s AND " + NOT_EXPIRED
 )
 
 
-def _row(r, target_days: int, now: datetime) -> dict:
+def _row(r, target_days: int, now: datetime, ctx: dict | None = None) -> dict:
+    ctx = ctx or {}
     return {
         "id": r["id"],
         "requester_name": r["requester_name"] or "（名前なし）",
@@ -39,7 +40,57 @@ def _row(r, target_days: int, now: datetime) -> dict:
         "status": r["status"],
         "overdue": r["status"] == "new" and r["created_at"] < now - timedelta(days=target_days),
         "waiting_hours": int((now - r["created_at"]).total_seconds() // 3600) if r["status"] == "new" else None,
+        "source": ctx.get("sources", {}).get(r["story_id"], {"route": "direct"}),
+        "customer": ctx.get("customers", {}).get(r["user_id"], {"faculty": None, "age_band": None, "situations": []}),
     }
+
+
+def writer_label(kind: str, age: int | None, gender: str | None) -> str:
+    """一般の卒業生は名前・写真を出さず「50代女性」のように表す(yokane-front の writerLabel と同じ)。"""
+    decade = f"{age // 10 * 10}代" if age is not None else ""
+    return f"{decade}{gender or ''}" or "卒業生"
+
+
+def _context(db: Connection, staff: Staff, rows) -> dict:
+    """申し込みの出どころ(どの経験談から来たか)と、お客さんの A1・A2(学部・年代・今の状況)。
+
+    年収の幅はだれにも見せない(要件8.1)ので読まない。"""
+    story_ids = sorted({r["story_id"] for r in rows if r["story_id"] is not None})
+    user_ids = sorted({r["user_id"] for r in rows if r["user_id"] is not None})
+    sources, customers = {}, {}
+    if story_ids:
+        q = text("SELECT st.id, st.headline, sp.id AS writer_id, sp.kind, sp.age, sp.gender, sp.situation_label "
+                 "FROM stories st JOIN speakers sp ON sp.id = st.speaker_id WHERE st.id IN :ids").bindparams(
+            bindparam("ids", expanding=True))
+        for s in db.execute(q, {"ids": story_ids}).mappings():
+            own = s["writer_id"] == staff.speaker_id
+            sources[s["id"]] = {
+                "route": "own_story" if own else ("graduate_story" if s["kind"] == "graduate" else "staff_story"),
+                "story_id": s["id"], "headline": s["headline"],
+                "writer_label": "あなた" if own else writer_label(s["kind"], s["age"], s["gender"]),
+                "writer_situation": None if own else s["situation_label"],
+            }
+    if user_ids:
+        ages = {o["code"]: o["label"] for o in get_setting(db, "age_band_options", [])}
+        q = text("SELECT user_id, faculty, age_band FROM customer_profiles WHERE user_id IN :ids").bindparams(
+            bindparam("ids", expanding=True))
+        for p in db.execute(q, {"ids": user_ids}).mappings():
+            customers[p["user_id"]] = {"faculty": p["faculty"], "age_band": ages.get(p["age_band"]), "situations": []}
+        q = text("SELECT cs.user_id, s.label FROM customer_situations cs JOIN situations s ON s.code = cs.situation_code "
+                 "WHERE cs.user_id IN :ids ORDER BY s.display_order").bindparams(bindparam("ids", expanding=True))
+        for u, label in db.execute(q, {"ids": user_ids}).all():
+            customers.setdefault(u, {"faculty": None, "age_band": None, "situations": []})["situations"].append(label)
+    return {"sources": sources, "customers": customers}
+
+
+def _story_body(db: Connection, story_id: int | None) -> dict | None:
+    """お客さんが読んだ経験談の本文(エピソードの4つ)。準備のために行員にも見せる。Q&A は出さない。"""
+    if story_id is None:
+        return None
+    r = db.execute(text(
+        "SELECT good_text, regret_text, trigger_title, trigger_body, hesitation_title, hesitation_body "
+        "FROM stories WHERE id = :i"), {"i": story_id}).mappings().first()
+    return dict(r) if r else None
 
 
 def _own(db: Connection, staff: Staff, request_id: int):
@@ -60,7 +111,8 @@ def list_requests(status: str | None = Query(default=None), staff: Staff = Depen
         raise ApiError(422, "VALIDATION_ERROR", "入力に誤りがあります", [{"field": "status", "reason": "invalid"}])
     rows = db.execute(text(_BASE + " ORDER BY mr.created_at DESC, mr.id DESC"), {"s": staff.speaker_id}).mappings().all()
     days, now = int(get_setting(db, "staff_reply_target_days", 2)), _now(db)
-    items = [_row(r, days, now) for r in rows]
+    ctx = _context(db, staff, rows)
+    items = [_row(r, days, now, ctx) for r in rows]
     counts = {s: sum(1 for i in items if i["status"] == s) for s in STATUSES}
     week_end = now + timedelta(days=7)
     this_week = db.execute(text(
@@ -116,8 +168,9 @@ def _record(db: Connection, request_id: int) -> dict | None:
 @router.get("/v1/staff/requests/{request_id}")
 def detail(request_id: int, staff: Staff = Depends(require_speaker), db: Connection = Depends(get_db)):
     r = _own(db, staff, request_id)
-    item = _row(r, int(get_setting(db, "staff_reply_target_days", 2)), _now(db))
+    item = _row(r, int(get_setting(db, "staff_reply_target_days", 2)), _now(db), _context(db, staff, [r]))
     item.update({
+        "story": _story_body(db, r["story_id"]),
         "decline_reason": r["decline_reason"],
         "share_result": bool(r["share_result"]),
         "result": _result(db, staff, r),
@@ -193,17 +246,20 @@ def decline(request_id: int, body: DeclineBody, staff: Staff = Depends(require_s
 @router.get("/v1/staff/schedule")
 def schedule(staff: Staff = Depends(require_speaker), db: Connection = Depends(get_db)):
     rows = db.execute(text(
-        "SELECT mr.id, mr.requester_name, mr.ask_topics, mr.pre_question, mr.status, "
+        "SELECT mr.id, mr.requester_name, mr.ask_topics, mr.pre_question, mr.status, mr.story_id, mr.user_id, "
         "p.starts_at, p.ends_at, p.method, p.place, (rec.request_id IS NOT NULL) AS recorded "
         "FROM meeting_requests mr JOIN meeting_proposals p ON p.request_id = mr.id AND p.chosen_at IS NOT NULL "
         "LEFT JOIN meeting_records rec ON rec.request_id = mr.id "
         "WHERE mr.speaker_id = :s AND mr.status IN ('scheduled','done') AND " + NOT_EXPIRED +
         " ORDER BY p.starts_at"), {"s": staff.speaker_id}).mappings().all()
+    ctx = _context(db, staff, rows)
     return {"items": [{
         "request_id": r["id"], "requester_name": r["requester_name"] or "（名前なし）",
         "ask_topics": json.loads(r["ask_topics"]) if r["ask_topics"] else [], "pre_question": r["pre_question"] or "",
         "status": r["status"], "starts_at": iso(r["starts_at"]), "ends_at": iso(r["ends_at"]),
         "method": r["method"], "place": r["place"] or "", "recorded": bool(r["recorded"]),
+        "source": ctx["sources"].get(r["story_id"], {"route": "direct"}),
+        "customer": ctx["customers"].get(r["user_id"], {"faculty": None, "age_band": None, "situations": []}),
     } for r in rows]}
 
 
@@ -242,7 +298,8 @@ def home(staff: Staff = Depends(require_speaker), db: Connection = Depends(get_d
     記録がまだの面談、今月の数字だけを返す。全件の一覧は /v1/staff/requests(P2-2)。"""
     days, now = int(get_setting(db, "staff_reply_target_days", 2)), _now(db)
     rows = db.execute(text(_BASE + " AND mr.status = 'new' ORDER BY mr.created_at, mr.id"), {"s": staff.speaker_id}).mappings().all()
-    waiting = [_row(r, days, now) for r in rows]
+    ctx = _context(db, staff, rows)
+    waiting = [_row(r, days, now, ctx) for r in rows]
     meets = schedule(staff, db)["items"]
     today = now.date().isoformat()
     upcoming = [m for m in meets if m["starts_at"] >= now.replace(microsecond=0).isoformat() + "+09:00"]

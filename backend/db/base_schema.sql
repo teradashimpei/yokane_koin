@@ -1,7 +1,7 @@
--- yokane-back の db/schema.sql を写したもの(road-yasu/yokane-back main 20ef673, 2026-11-17)。
+-- yokane-back の db/schema.sql を写したもの(road-yasu/yokane-back main 54b9fb3, 2026-11-20)。
 -- お客さん側のテーブルの持ち主は yokane-back。ここではローカルの開発・テストのためだけに使う。
 -- 仕様設計書 v0.4 6.3 の CREATE TABLE をそのまま写したもの。
--- 6.3末尾の「新版」の記述にある diagnoses.expires_at / meeting_requests.expires_at だけ足している。
+-- 6.3末尾の「新版」の記述にある diagnoses.expires_at / meeting_requests.expires_at と、v0.6 6.3 の追加・変更を反映している。
 SET NAMES utf8mb4;
 
 -- ===== 設定データ(差し替えるもの: MR-09 / N-11) =====
@@ -47,6 +47,7 @@ CREATE TABLE speakers (
   id               INT UNSIGNED NOT NULL AUTO_INCREMENT,
   speaker_key      VARCHAR(20)  NOT NULL,          -- Excelの「行員ID」(例 ST0001)
   name             VARCHAR(50)  NOT NULL,
+  kind            ENUM('staff','graduate') NOT NULL DEFAULT 'staff', -- 13_卒業生30「種別」
   photo_url        VARCHAR(255) NULL,              -- 例 /images/speakers/ST0001.webp(顔写真。ファイルはフロントに置く。DP-36)
   one_liner        VARCHAR(100) NULL,              -- 05の一言(Excel「ひと言キャッチ」。D-18)
   area             VARCHAR(50)  NULL,              -- プロフィール(基本情報): 担当エリア(架空)
@@ -57,6 +58,13 @@ CREATE TABLE speakers (
   is_active        BOOLEAN      NOT NULL DEFAULT TRUE,
   created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  gender          VARCHAR(10)  NULL,   -- 「性別」
+  age             TINYINT UNSIGNED NULL, -- 「年齢」。行員の年齢は画面に出さない(API で落とす)
+  faculty         VARCHAR(30)  NULL,   -- 「学部」
+  grad_year       SMALLINT UNSIGNED NULL, -- 「卒業年(目安)」
+  occupation      VARCHAR(50)  NULL,   -- 「職業(一般のみ)」。画面には出さない(PoC)
+  income_band     VARCHAR(20)  NULL,   -- 「年収帯(一般のみ・画面に出さない)」。どのAPIも返さない
+  situation_label VARCHAR(30)  NULL,   -- 「状況の札」例 結婚して2年目
   PRIMARY KEY (id),
   UNIQUE KEY uq_speakers_key (speaker_key),
   KEY ix_speakers_pattern (is_active, pattern)
@@ -194,11 +202,97 @@ CREATE TABLE likes (
   CONSTRAINT fk_likes_episode FOREIGN KEY (episode_id) REFERENCES speaker_episodes (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
+CREATE TABLE experiences (                        -- 14_状況と一段先「話し手の経験」
+  code          VARCHAR(4)  NOT NULL,             -- E01〜E08
+  name          VARCHAR(50) NOT NULL,
+  display_order TINYINT UNSIGNED NOT NULL,
+  PRIMARY KEY (code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE situations (                         -- 14_状況と一段先「A2の状況」
+  code          VARCHAR(4)  NOT NULL,             -- S01〜S09
+  label         VARCHAR(30) NOT NULL,
+  display_order TINYINT UNSIGNED NOT NULL,
+  is_active     BOOLEAN     NOT NULL DEFAULT TRUE, -- Excel から消えたコードは FALSE(行は消さない)
+  PRIMARY KEY (code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE situation_next_steps (               -- 状況 → 一段先に当たる経験(「(なし)」は行を作らない)
+  situation_code  VARCHAR(4) NOT NULL,
+  experience_code VARCHAR(4) NOT NULL,
+  PRIMARY KEY (situation_code, experience_code),
+  CONSTRAINT fk_sns_situation  FOREIGN KEY (situation_code)  REFERENCES situations (code)  ON DELETE CASCADE,
+  CONSTRAINT fk_sns_experience FOREIGN KEY (experience_code) REFERENCES experiences (code) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE speaker_experiences (                -- 13「経験した出来事」「いちばん語れる出来事」
+  speaker_id      INT UNSIGNED NOT NULL,
+  experience_code VARCHAR(4)   NOT NULL,
+  is_main         BOOLEAN      NOT NULL DEFAULT FALSE,
+  PRIMARY KEY (speaker_id, experience_code),
+  CONSTRAINT fk_sx_speaker    FOREIGN KEY (speaker_id)      REFERENCES speakers (id)    ON DELETE CASCADE,
+  CONSTRAINT fk_sx_experience FOREIGN KEY (experience_code) REFERENCES experiences (code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE stories (                            -- 経験談(PoCは1人1本)
+  id               INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  speaker_id       INT UNSIGNED NOT NULL,
+  headline         VARCHAR(100) NOT NULL,         -- 「カードの一言」
+  good_text        TEXT         NOT NULL,         -- 「やって良かったこと」
+  regret_text      TEXT         NOT NULL,         -- 「後悔していること」
+  trigger_title    VARCHAR(50)  NOT NULL,         -- 「きっかけ_見出し」
+  trigger_body     TEXT         NOT NULL,
+  hesitation_title VARCHAR(50)  NOT NULL,         -- 「迷ったこと_見出し」
+  hesitation_body  TEXT         NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_stories_speaker (speaker_id),     -- 1人1本(将来複数にするならこの一意キーを外す)
+  CONSTRAINT fk_stories_speaker FOREIGN KEY (speaker_id) REFERENCES speakers (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE story_qas (
+  story_id INT UNSIGNED     NOT NULL,
+  qa_no    TINYINT UNSIGNED NOT NULL,             -- 1〜4
+  question VARCHAR(200)     NOT NULL,
+  answer   TEXT             NOT NULL,
+  PRIMARY KEY (story_id, qa_no),
+  CONSTRAINT fk_story_qas_story FOREIGN KEY (story_id) REFERENCES stories (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE customer_profiles (                  -- A1(利用者に1行。上書き)
+  user_id     INT UNSIGNED NOT NULL,
+  faculty     VARCHAR(30)  NULL,
+  age_band    VARCHAR(8)   NULL,                  -- age_band_options の code
+  income_band VARCHAR(8)   NULL,                  -- income_band_options の code。だれにも見せない
+  updated_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (user_id),
+  CONSTRAINT fk_cp_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE customer_situations (                -- A2(0行〜有効な状況の数。上書き = 消して入れ直す)
+  user_id        INT UNSIGNED NOT NULL,
+  situation_code VARCHAR(4)   NOT NULL,
+  PRIMARY KEY (user_id, situation_code),
+  CONSTRAINT fk_cs_user      FOREIGN KEY (user_id)        REFERENCES users (id)       ON DELETE CASCADE,
+  CONSTRAINT fk_cs_situation FOREIGN KEY (situation_code) REFERENCES situations (code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE story_likes (                        -- A5 の「わかる」
+  id         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  visitor_id CHAR(36)        NOT NULL,
+  story_id   INT UNSIGNED    NOT NULL,
+  created_at DATETIME(3)     NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_story_likes (visitor_id, story_id),
+  CONSTRAINT fk_sl_visitor FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE,
+  CONSTRAINT fk_sl_story   FOREIGN KEY (story_id)   REFERENCES stories (id)  ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
 CREATE TABLE meeting_requests (
   id             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   visitor_id     CHAR(36)        NOT NULL,
   user_id        INT UNSIGNED    NULL,             -- 送ったときログインしていれば入る(DP-31)
   speaker_id     INT UNSIGNED    NOT NULL,
+  story_id       INT UNSIGNED NULL,               -- どの経験談から来たか(A6-1/A6-2)
   diagnosis_id   BIGINT UNSIGNED NULL,             -- 送ったときの結果
   preferences    JSON            NOT NULL,         -- ざっくりした希望の文の配列(1つ以上。P-29)
   meeting_method ENUM('in_person','online') NOT NULL, -- 会い方(P-27。呼び方はQ-11)
@@ -217,7 +311,8 @@ CREATE TABLE meeting_requests (
   CONSTRAINT fk_mr_visitor   FOREIGN KEY (visitor_id)   REFERENCES visitors (id)  ON DELETE CASCADE,
   CONSTRAINT fk_mr_user      FOREIGN KEY (user_id)      REFERENCES users (id)     ON DELETE CASCADE,
   CONSTRAINT fk_mr_speaker   FOREIGN KEY (speaker_id)   REFERENCES speakers (id),
-  CONSTRAINT fk_mr_diagnosis FOREIGN KEY (diagnosis_id) REFERENCES diagnoses (id) ON DELETE SET NULL
+  CONSTRAINT fk_mr_diagnosis FOREIGN KEY (diagnosis_id) REFERENCES diagnoses (id) ON DELETE SET NULL,
+  CONSTRAINT fk_mr_story FOREIGN KEY (story_id) REFERENCES stories (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- ===== 計測 =====

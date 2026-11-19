@@ -1,6 +1,6 @@
 """ローカル・デモ用のDBを作り直す。中身は消える。
 
-  python -m scripts.apply_db            # base_schema → 001_staff → demo_seed → 話し手の点を計算
+  python -m scripts.apply_db            # base_schema → migrations → customer_seed → demo_seed → 話し手の点を計算
   python -m scripts.apply_db --no-seed  # データなし(テスト用)
 
 本番(Azure)では yokane-back がお客さん側のテーブルを持つので、db/migrations/*.sql だけを流す。
@@ -30,7 +30,8 @@ def reset(conn: Connection, seed: bool = True) -> None:
     for m in sorted((DB / "migrations").glob("*.sql")):
         run_sql(conn, m)
     if seed:
-        run_sql(conn, DB / "demo_seed.sql")
+        run_sql(conn, DB / "customer_seed.sql")   # お客さん側(yokane-back の取り込み結果)
+        run_sql(conn, DB / "demo_seed.sql")       # 行員側(scripts/make_demo_seed.py)
         recalc_speakers(conn)
 
 

@@ -1,6 +1,6 @@
-"""S-02〜S-08 プロフィール(P5・B1)と 12問(B2)。"""
+"""S-02〜S-08 プロフィール(P5・B1)、経験談(A5 に出る1人1本)と 12問(B2)。"""
 import json
-import secrets
+import re
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
@@ -11,21 +11,19 @@ from app.deps import Staff, log_staff_event, require_speaker
 from app.errors import ApiError
 from app.services import scoring
 from app.services.settings_repo import get_setting
+from app.timefmt import iso
 
 router = APIRouter()
 
 HIDEABLE = ("area", "job_title", "intro_text", "personality_text", "private_tags")
 TAG_RANGE = {"specialty": (2, 4), "private": (3, 5)}   # 03_タグ辞書の推奨数(S-03)
-MAX_EPISODES = 3
-
-
-def _episodes(db: Connection, speaker_id: int) -> list:
-    rows = db.execute(text(
-        "SELECT e.id, e.title, e.body, e.status, a.code AS axis FROM speaker_episodes e "
-        "LEFT JOIN axes a ON a.id = e.axis_id "
-        "WHERE e.speaker_id = :s AND e.source_type = 'self' ORDER BY e.id"
-    ), {"s": speaker_id}).mappings().all()
-    return [dict(r) for r in rows]
+STORY_FIELDS = {  # 列 → (お客さんに見える見出し, 最大文字数)
+    "headline": ("カードの一言", 100), "good_text": ("やって良かったこと", 600), "regret_text": ("後悔していること", 600),
+    "trigger_title": ("きっかけ(見出し)", 50), "trigger_body": ("きっかけ(本文)", 600),
+    "hesitation_title": ("迷ったこと(見出し)", 50), "hesitation_body": ("迷ったこと(本文)", 600),
+}
+QA_COUNT = 4
+MONEY = re.compile(r"万円|年収|円")   # yokane-back の取り込みと同じ決まり(RK-16)。行員の文に金額を書かない
 
 
 def _value_tags(db: Connection, speaker_id: int) -> list:
@@ -37,11 +35,36 @@ def _value_tags(db: Connection, speaker_id: int) -> list:
     return [(labels.get(code) or {}).get(str(level)) for code, level in rows]
 
 
+def _story(db: Connection, speaker_id: int) -> dict | None:
+    """公開中の経験談(お客さんの A5 に出ているもの)。"""
+    st = db.execute(text(
+        "SELECT id, headline, good_text, regret_text, trigger_title, trigger_body, hesitation_title, hesitation_body "
+        "FROM stories WHERE speaker_id = :s"), {"s": speaker_id}).mappings().first()
+    if st is None:
+        return None
+    qas = db.execute(text("SELECT question, answer FROM story_qas WHERE story_id = :i ORDER BY qa_no"),
+                     {"i": st["id"]}).mappings().all()
+    return {**dict(st), "qas": [dict(q) for q in qas]}
+
+
+def _draft(db: Connection, speaker_id: int) -> dict | None:
+    """運営の確認を待っている書き直し。"""
+    d = db.execute(text(
+        "SELECT headline, good_text, regret_text, trigger_title, trigger_body, hesitation_title, hesitation_body, "
+        "qas, situation_label, submitted_at FROM story_drafts WHERE speaker_id = :s"), {"s": speaker_id}).mappings().first()
+    if d is None:
+        return None
+    out = dict(d)
+    out["qas"] = json.loads(out["qas"])
+    out["submitted_at"] = iso(out["submitted_at"])
+    return out
+
+
 @router.get("/v1/staff/me")
 def me(staff: Staff = Depends(require_speaker), db: Connection = Depends(get_db)):
     sp = db.execute(text(
-        "SELECT id, speaker_key, name, photo_url, one_liner, area, job_title, intro_text, personality_text, "
-        "pattern, accepting, hidden_fields FROM speakers WHERE id = :i"
+        "SELECT id, speaker_key, name, kind, photo_url, one_liner, area, job_title, intro_text, personality_text, "
+        "faculty, gender, situation_label, pattern, accepting, hidden_fields FROM speakers WHERE id = :i"
     ), {"i": staff.speaker_id}).mappings().first()
     tags = db.execute(text(
         "SELECT t.id, t.kind, t.name, (st.tag_id IS NOT NULL) AS selected FROM tags t "
@@ -56,7 +79,8 @@ def me(staff: Staff = Depends(require_speaker), db: Connection = Depends(get_db)
         "profile": profile,
         "tags": [{**dict(t), "selected": bool(t["selected"])} for t in tags],
         "tag_range": TAG_RANGE,
-        "episodes": _episodes(db, staff.speaker_id),
+        "story": _story(db, staff.speaker_id),
+        "story_draft": _draft(db, staff.speaker_id),
         "value_tags": _value_tags(db, staff.speaker_id),
         "answered_count": answered,
     }
@@ -108,38 +132,69 @@ def save_profile(body: ProfileBody, staff: Staff = Depends(require_speaker), db:
     return me(staff, db)
 
 
-class EpisodeBody(BaseModel):
-    title: str = Field(min_length=1, max_length=50)
-    body: str = Field(min_length=1, max_length=400)
+class QA(BaseModel):
+    question: str = Field(min_length=1, max_length=200)
+    answer: str = Field(min_length=1, max_length=600)
 
 
-@router.post("/v1/staff/me/episodes", status_code=201)
-def add_episode(body: EpisodeBody, staff: Staff = Depends(require_speaker), db: Connection = Depends(get_db)):
-    if len(_episodes(db, staff.speaker_id)) >= MAX_EPISODES:
-        raise ApiError(409, "TOO_MANY_EPISODES", f"体験談は{MAX_EPISODES}本までです")
-    key = "N" + secrets.token_hex(4)[:9]
+class StoryBody(BaseModel):
+    headline: str = Field(min_length=1, max_length=100)
+    good_text: str = Field(min_length=1, max_length=600)
+    regret_text: str = Field(min_length=1, max_length=600)
+    trigger_title: str = Field(min_length=1, max_length=50)
+    trigger_body: str = Field(min_length=1, max_length=600)
+    hesitation_title: str = Field(min_length=1, max_length=50)
+    hesitation_body: str = Field(min_length=1, max_length=600)
+    qas: list[QA] = Field(min_length=QA_COUNT, max_length=QA_COUNT)
+    situation_label: str = Field(default="", max_length=30)
+
+
+def story_problems(db: Connection, speaker_id: int, body: dict) -> list:
+    """行員の経験談に書いてはいけないこと(金額・今の年齢)。yokane-back の取り込みのチェックと同じ。"""
+    age = db.execute(text("SELECT age FROM speakers WHERE id = :s"), {"s": speaker_id}).scalar()
+    age_re = re.compile(rf"(?<!\d){age}歳") if age else None
+    texts = {k: body[k] for k in STORY_FIELDS}
+    for i, qa in enumerate(body["qas"], 1):
+        texts[f"qas.{i}.question"], texts[f"qas.{i}.answer"] = qa["question"], qa["answer"]
+    out = []
+    for field, value in texts.items():
+        if MONEY.search(value or ""):
+            out.append({"field": field, "reason": "money"})
+        if age_re and age_re.search(value or ""):
+            out.append({"field": field, "reason": "age"})
+    return out
+
+
+@router.put("/v1/staff/me/story")
+def save_story(body: StoryBody, staff: Staff = Depends(require_speaker), db: Connection = Depends(get_db)):
+    """経験談を書き直す。下書きに入り、運営が確かめて「公開」するとお客さんの画面(A4・A5)が変わる(S-04)。"""
+    data = body.model_dump()
+    data = {k: (v.strip() if isinstance(v, str) else v) for k, v in data.items()}
+    data["qas"] = [{"question": q["question"].strip(), "answer": q["answer"].strip()} for q in data["qas"]]
+    problems = story_problems(db, staff.speaker_id, data)
+    if problems:
+        raise ApiError(422, "VALIDATION_ERROR", "金額や今の年齢は書けません(本人が特定されやすいため)", problems)
     db.execute(text(
-        "INSERT INTO speaker_episodes (episode_key, speaker_id, source_type, title, body, status) "
-        "VALUES (:k, :s, 'self', :t, :b, 'draft')"
-    ), {"k": key, "s": staff.speaker_id, "t": body.title.strip(), "b": body.body.strip()})
-    log_staff_event(db, staff.id, "episode_save")
+        "INSERT INTO story_drafts (speaker_id, headline, good_text, regret_text, trigger_title, trigger_body, "
+        "hesitation_title, hesitation_body, qas, situation_label) VALUES (:s, :headline, :good_text, :regret_text, "
+        ":trigger_title, :trigger_body, :hesitation_title, :hesitation_body, :qas, :situation_label) "
+        "ON DUPLICATE KEY UPDATE headline = VALUES(headline), good_text = VALUES(good_text), "
+        "regret_text = VALUES(regret_text), trigger_title = VALUES(trigger_title), trigger_body = VALUES(trigger_body), "
+        "hesitation_title = VALUES(hesitation_title), hesitation_body = VALUES(hesitation_body), qas = VALUES(qas), "
+        "situation_label = VALUES(situation_label)"
+    ), {**data, "s": staff.speaker_id, "qas": json.dumps(data["qas"], ensure_ascii=False),
+        "situation_label": data["situation_label"] or None})
+    log_staff_event(db, staff.id, "story_save")
     db.commit()
-    return {"episodes": _episodes(db, staff.speaker_id)}
+    return me(staff, db)
 
 
-@router.put("/v1/staff/me/episodes/{episode_id}")
-def edit_episode(episode_id: int, body: EpisodeBody, staff: Staff = Depends(require_speaker),
-                 db: Connection = Depends(get_db)):
-    """書き換えると下書きに戻り、運営の確認後に公開される(S-04)。"""
-    n = db.execute(text(
-        "UPDATE speaker_episodes SET title = :t, body = :b, status = 'draft', reviewed_by = NULL, reviewed_at = NULL "
-        "WHERE id = :i AND speaker_id = :s AND source_type = 'self'"
-    ), {"t": body.title.strip(), "b": body.body.strip(), "i": episode_id, "s": staff.speaker_id}).rowcount
-    if n == 0:
-        raise ApiError(404, "NOT_FOUND", "見つかりません")
-    log_staff_event(db, staff.id, "episode_save")
+@router.delete("/v1/staff/me/story")
+def discard_story(staff: Staff = Depends(require_speaker), db: Connection = Depends(get_db)):
+    """確認待ちの書き直しを取り消す(公開中の経験談はそのまま)。"""
+    db.execute(text("DELETE FROM story_drafts WHERE speaker_id = :s"), {"s": staff.speaker_id})
     db.commit()
-    return {"episodes": _episodes(db, staff.speaker_id)}
+    return me(staff, db)
 
 
 @router.get("/v1/staff/questions")
