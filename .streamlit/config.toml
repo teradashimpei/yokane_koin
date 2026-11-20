@@ -1,0 +1,13 @@
+# Streamlit 版(streamlit/app.py)の見た目。Next.js 版の globals.css の色にそろえる
+[theme]
+base = "light"
+primaryColor = "#254aa5"
+backgroundColor = "#f3f5f9"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#1e2430"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false

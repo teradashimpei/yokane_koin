@@ -68,6 +68,10 @@ cd backend && DB_HOST=127.0.0.1 DB_USER=root .venv/bin/pytest -q
 
 ほかのアカウント: `takano@example.com`（高野 直人。希望2件だけ。傾向は「5人そろうと表示」になる）、`aoyama@example.com`（青山 祐介）、`admin@example.com`（運営）。
 
+## Streamlit 版（デモデータだけ）
+
+DB につながずに URL だけで行員側を見せる版を `streamlit/` に置いています。7画面と文言は Next.js 版と同じです。動かし方と公開のしかたは [streamlit/README.md](streamlit/README.md)。
+
 ## デモデータの作り直し
 
 - お客さん側（`db/customer_seed.sql`）: yokane-back の Excel が変わったら、yokane-back で `import_seed` を空のDB（例 `yokane_seedtmp`）に流し、`scripts/dump_customer_seed.py` で書き出す（手順はファイルの先頭）。あわせて `db/base_schema.sql` を yokane-back の `db/schema.sql` に合わせる

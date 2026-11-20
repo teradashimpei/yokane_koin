@@ -1,0 +1,1279 @@
+{
+ "taken_at": "2026-11-20T13:28:07+09:00",
+ "staff": {
+  "id": 1,
+  "display_name": "森下 由美",
+  "role": "staff",
+  "speaker": {
+   "id": 2,
+   "name": "森下由美",
+   "photo_url": "/images/speakers/demo_ST0009.webp"
+  }
+ },
+ "requests": [
+  {
+   "id": 1,
+   "requester_name": "ゆう",
+   "preferences": [
+    "平日の夜"
+   ],
+   "meeting_method": "online",
+   "ask_topics": [
+    "漠然とした不安・もやもやを聞いてほしい"
+   ],
+   "pre_question": "家を買うか借りるかで迷っています。買ったあとのお金の計画を聞きたいです",
+   "created_at": "2026-11-20T10:28:07+09:00",
+   "status": "new",
+   "overdue": false,
+   "waiting_hours": 3,
+   "source": {
+    "route": "own_story",
+    "story_id": 2,
+    "headline": "家は、買うときより買ったあとのお金の計画が大事でした。",
+    "writer_label": "あなた",
+    "writer_situation": null
+   },
+   "customer": {
+    "faculty": "法学部",
+    "age_band": "30代前半",
+    "situations": [
+     "結婚したばかり",
+     "住宅を検討中"
+    ]
+   },
+   "story": {
+    "good_text": "ローンの返済額を、家賃ではなく「老後まで払い続けられる額」で考えたことです。教育費や修繕費も含めて、先にライフプランを書き出しました。",
+    "regret_text": "ローンの金利タイプや繰り上げ返済の仕組みを、もっと勉強してから決めればよかったことです。仕事で金融に関わっていたのに、自分のことになると勢いで決めてしまいました。",
+    "trigger_title": "30歳の秋",
+    "trigger_body": "家賃を払い続けるより、自分の資産になる家を持ちたいと考えたからです。",
+    "hesitation_title": "買うか、借りるか",
+    "hesitation_body": "毎月の返済を30年以上払い続けられるのか、結婚や転勤など今後の変化に耐えられるのかも気になりました。金融の仕事をしていても、自分のこととなると、金利タイプやいくらまで借りるかを決めるのに時間がかかりました。"
+   },
+   "decline_reason": null,
+   "share_result": true,
+   "result": {
+    "texts": [
+     "使い慣れた道具やいつもの習慣を大切にし、穏やかな時間を楽しむ。",
+     "条件や例外まで確認し、比べて納得してから決める。",
+     "将来に回す予定のお金でも、今の体験や大切な人との時間に使う選択をする。"
+    ],
+    "same_levels": 3,
+    "axes": 3
+   },
+   "proposals": [],
+   "record": null
+  },
+  {
+   "id": 3,
+   "requester_name": "まい",
+   "preferences": [],
+   "meeting_method": "in_person",
+   "ask_topics": [],
+   "pre_question": "頭金をどれくらい用意すればいいのか気になります",
+   "created_at": "2026-11-19T17:28:07+09:00",
+   "status": "new",
+   "overdue": false,
+   "waiting_hours": 20,
+   "source": {
+    "route": "graduate_story",
+    "story_id": 17,
+    "headline": "頭金は、結婚式を小さくして作った",
+    "writer_label": "30代女性",
+    "writer_situation": "家を買って2年目"
+   },
+   "customer": {
+    "faculty": "商学部",
+    "age_band": "20代後半",
+    "situations": [
+     "結婚を考え始めた",
+     "住宅を検討中"
+    ]
+   },
+   "story": {
+    "good_text": "結婚式を家族だけにして、浮いた200万円を家の頭金に回した。毎月の返済が、考えていたより1万円少なくなった。",
+    "regret_text": "住宅ローンの手数料や登記の費用で、思ったより手元のお金が減った。諸費用で約150万円かかった。",
+    "trigger_title": "31歳の秋",
+    "trigger_body": "犬を飼いたくて、ペットと住める賃貸を探したが少なかった。「買ったほうが早いかも」と夫が言った。",
+    "hesitation_title": "変動か固定か",
+    "hesitation_body": "半年たってもまだ迷うくらい悩んだ。返済が増えても困らない額を計算して、変動にした。"
+   },
+   "decline_reason": null,
+   "share_result": true,
+   "result": {
+    "texts": [
+     "使い慣れた道具やいつもの習慣を大切にし、穏やかな時間を楽しむ。",
+     "小さなことは思い切りよく、大きな決断は確かめてから進める。",
+     "今の楽しみも先の備えも大切にし、状況に応じて使い分ける。"
+    ],
+    "same_levels": 1,
+    "axes": 3
+   },
+   "proposals": [],
+   "record": null
+  },
+  {
+   "id": 4,
+   "requester_name": "けん",
+   "preferences": [
+    "休日の午前",
+    "休日の午後"
+   ],
+   "meeting_method": "online",
+   "ask_topics": [
+    "資産運用に興味があるが、何から始めればいいか"
+   ],
+   "pre_question": "結婚して家計を一つにしたところです。住まいのお金をどう分けるか聞きたい",
+   "created_at": "2026-11-19T07:28:07+09:00",
+   "status": "replied",
+   "overdue": false,
+   "waiting_hours": null,
+   "source": {
+    "route": "own_story",
+    "story_id": 2,
+    "headline": "家は、買うときより買ったあとのお金の計画が大事でした。",
+    "writer_label": "あなた",
+    "writer_situation": null
+   },
+   "customer": {
+    "faculty": "文学部",
+    "age_band": "30代前半",
+    "situations": [
+     "結婚したばかり"
+    ]
+   },
+   "story": {
+    "good_text": "ローンの返済額を、家賃ではなく「老後まで払い続けられる額」で考えたことです。教育費や修繕費も含めて、先にライフプランを書き出しました。",
+    "regret_text": "ローンの金利タイプや繰り上げ返済の仕組みを、もっと勉強してから決めればよかったことです。仕事で金融に関わっていたのに、自分のことになると勢いで決めてしまいました。",
+    "trigger_title": "30歳の秋",
+    "trigger_body": "家賃を払い続けるより、自分の資産になる家を持ちたいと考えたからです。",
+    "hesitation_title": "買うか、借りるか",
+    "hesitation_body": "毎月の返済を30年以上払い続けられるのか、結婚や転勤など今後の変化に耐えられるのかも気になりました。金融の仕事をしていても、自分のこととなると、金利タイプやいくらまで借りるかを決めるのに時間がかかりました。"
+   },
+   "decline_reason": null,
+   "share_result": true,
+   "result": {
+    "texts": [
+     "使い慣れた道具やいつもの習慣を大切にし、穏やかな時間を楽しむ。",
+     "条件や例外まで確認し、比べて納得してから決める。",
+     "今の楽しみも先の備えも大切にし、状況に応じて使い分ける。"
+    ],
+    "same_levels": 2,
+    "axes": 3
+   },
+   "proposals": [
+    {
+     "id": 1,
+     "starts_at": "2026-11-22T19:00:00+09:00",
+     "ends_at": "2026-11-22T19:30:00+09:00",
+     "method": "online",
+     "place": "",
+     "chosen": false
+    },
+    {
+     "id": 2,
+     "starts_at": "2026-11-23T19:00:00+09:00",
+     "ends_at": "2026-11-23T19:30:00+09:00",
+     "method": "online",
+     "place": "",
+     "chosen": false
+    },
+    {
+     "id": 3,
+     "starts_at": "2026-11-25T19:00:00+09:00",
+     "ends_at": "2026-11-25T19:30:00+09:00",
+     "method": "online",
+     "place": "",
+     "chosen": false
+    }
+   ],
+   "record": null
+  },
+  {
+   "id": 2,
+   "requester_name": "あや",
+   "preferences": [],
+   "meeting_method": "online",
+   "ask_topics": [],
+   "pre_question": "一人で家を買うのは早いのか、気になりました",
+   "created_at": "2026-11-18T01:28:07+09:00",
+   "status": "new",
+   "overdue": true,
+   "waiting_hours": 60,
+   "source": {
+    "route": "graduate_story",
+    "story_id": 6,
+    "headline": "50代で一人で買うなら、返し終わる年齢から逆算した",
+    "writer_label": "50代女性",
+    "writer_situation": "家を買って3年"
+   },
+   "customer": {
+    "faculty": null,
+    "age_band": "40代前半",
+    "situations": [
+     "住宅を検討中"
+    ]
+   },
+   "story": {
+    "good_text": "51歳でマンションを買うとき、退職の年までに返し終わるよう、頭金を多めの800万円にした。毎月の返済は、前の家賃より低い。",
+    "regret_text": "候補の町を歩いて比べるのに時間をかけすぎて、気に入った部屋を一度逃した。",
+    "trigger_title": "50歳の冬",
+    "trigger_body": "賃貸の更新のとき、「70歳を過ぎると借りにくくなる」と聞いた。老後の住まいを考え始めた。",
+    "hesitation_title": "買うか、借り続けるか",
+    "hesitation_body": "身軽な賃貸も好きだった。老後の家賃を計算したら、買って住み続けるほうが安心できた。"
+   },
+   "decline_reason": null,
+   "share_result": false,
+   "result": null,
+   "proposals": [],
+   "record": null
+  },
+  {
+   "id": 5,
+   "requester_name": "さき",
+   "preferences": [
+    "平日の夜"
+   ],
+   "meeting_method": "in_person",
+   "ask_topics": [
+    "漠然とした不安・もやもやを聞いてほしい",
+    "もっと他の事例も聞いてみたい"
+   ],
+   "pre_question": "固定金利と変動金利で迷っています",
+   "created_at": "2026-11-17T13:28:07+09:00",
+   "status": "scheduled",
+   "overdue": false,
+   "waiting_hours": null,
+   "source": {
+    "route": "own_story",
+    "story_id": 2,
+    "headline": "家は、買うときより買ったあとのお金の計画が大事でした。",
+    "writer_label": "あなた",
+    "writer_situation": null
+   },
+   "customer": {
+    "faculty": "法学部",
+    "age_band": "30代後半",
+    "situations": [
+     "住宅を検討中"
+    ]
+   },
+   "story": {
+    "good_text": "ローンの返済額を、家賃ではなく「老後まで払い続けられる額」で考えたことです。教育費や修繕費も含めて、先にライフプランを書き出しました。",
+    "regret_text": "ローンの金利タイプや繰り上げ返済の仕組みを、もっと勉強してから決めればよかったことです。仕事で金融に関わっていたのに、自分のことになると勢いで決めてしまいました。",
+    "trigger_title": "30歳の秋",
+    "trigger_body": "家賃を払い続けるより、自分の資産になる家を持ちたいと考えたからです。",
+    "hesitation_title": "買うか、借りるか",
+    "hesitation_body": "毎月の返済を30年以上払い続けられるのか、結婚や転勤など今後の変化に耐えられるのかも気になりました。金融の仕事をしていても、自分のこととなると、金利タイプやいくらまで借りるかを決めるのに時間がかかりました。"
+   },
+   "decline_reason": null,
+   "share_result": true,
+   "result": {
+    "texts": [
+     "使い慣れた道具やいつもの習慣を大切にし、穏やかな時間を楽しむ。",
+     "条件や例外まで確認し、比べて納得してから決める。",
+     "将来に回す予定のお金でも、今の体験や大切な人との時間に使う選択をする。"
+    ],
+    "same_levels": 3,
+    "axes": 3
+   },
+   "proposals": [
+    {
+     "id": 4,
+     "starts_at": "2026-11-20T15:00:00+09:00",
+     "ends_at": "2026-11-20T15:30:00+09:00",
+     "method": "in_person",
+     "place": "福岡銀行 本店",
+     "chosen": true
+    }
+   ],
+   "record": null
+  },
+  {
+   "id": 6,
+   "requester_name": "りょう",
+   "preferences": [],
+   "meeting_method": "online",
+   "ask_topics": [],
+   "pre_question": "独身で家を買った人の話を、もう少し聞いてみたい",
+   "created_at": "2026-11-16T19:28:07+09:00",
+   "status": "scheduled",
+   "overdue": false,
+   "waiting_hours": null,
+   "source": {
+    "route": "graduate_story",
+    "story_id": 15,
+    "headline": "独身で家を買うなら、貸せる場所を選ぶ",
+    "writer_label": "50代男性",
+    "writer_situation": "家を買って8年"
+   },
+   "customer": {
+    "faculty": "経済学部",
+    "age_band": "40代後半",
+    "situations": [
+     "その他"
+    ]
+   },
+   "story": {
+    "good_text": "43歳で中古マンションを2,400万円で買った。駅から5分の場所にしたので、もし住めなくなっても貸せる。",
+    "regret_text": "修繕積立金が、買ったあとに上がると知らなかった。月1万円から2万円になった。",
+    "trigger_title": "42歳の冬",
+    "trigger_body": "家賃を20年払い続けてきたと気づいて、合計を計算した。思わず家計簿を閉じた。",
+    "hesitation_title": "一人で買う意味",
+    "hesitation_body": "「結婚したらどうするの」と何度も聞かれた。売っても貸してもいい場所なら、と決めた。"
+   },
+   "decline_reason": null,
+   "share_result": false,
+   "result": null,
+   "proposals": [
+    {
+     "id": 5,
+     "starts_at": "2026-11-18T19:00:00+09:00",
+     "ends_at": "2026-11-18T19:30:00+09:00",
+     "method": "online",
+     "place": "",
+     "chosen": true
+    }
+   ],
+   "record": null
+  },
+  {
+   "id": 10,
+   "requester_name": "しん",
+   "preferences": [
+    "平日の午後"
+   ],
+   "meeting_method": "online",
+   "ask_topics": [
+    "漠然とした不安・もやもやを聞いてほしい"
+   ],
+   "pre_question": "子どもが生まれる前に、住まいをどうするか",
+   "created_at": "2026-11-15T13:28:07+09:00",
+   "status": "declined",
+   "overdue": false,
+   "waiting_hours": null,
+   "source": {
+    "route": "own_story",
+    "story_id": 2,
+    "headline": "家は、買うときより買ったあとのお金の計画が大事でした。",
+    "writer_label": "あなた",
+    "writer_situation": null
+   },
+   "customer": {
+    "faculty": null,
+    "age_band": "30代後半",
+    "situations": [
+     "子どもが生まれる"
+    ]
+   },
+   "story": {
+    "good_text": "ローンの返済額を、家賃ではなく「老後まで払い続けられる額」で考えたことです。教育費や修繕費も含めて、先にライフプランを書き出しました。",
+    "regret_text": "ローンの金利タイプや繰り上げ返済の仕組みを、もっと勉強してから決めればよかったことです。仕事で金融に関わっていたのに、自分のことになると勢いで決めてしまいました。",
+    "trigger_title": "30歳の秋",
+    "trigger_body": "家賃を払い続けるより、自分の資産になる家を持ちたいと考えたからです。",
+    "hesitation_title": "買うか、借りるか",
+    "hesitation_body": "毎月の返済を30年以上払い続けられるのか、結婚や転勤など今後の変化に耐えられるのかも気になりました。金融の仕事をしていても、自分のこととなると、金利タイプやいくらまで借りるかを決めるのに時間がかかりました。"
+   },
+   "decline_reason": "日程が合わない",
+   "share_result": true,
+   "result": {
+    "texts": [
+     "新しい体験に心が動く一方、落ち着く習慣も手放さない。",
+     "小さなことは思い切りよく、大きな決断は確かめてから進める。",
+     "将来に回す予定のお金でも、今の体験や大切な人との時間に使う選択をする。"
+    ],
+    "same_levels": 1,
+    "axes": 3
+   },
+   "proposals": [],
+   "record": null
+  },
+  {
+   "id": 7,
+   "requester_name": "なつみ",
+   "preferences": [
+    "休日の午後"
+   ],
+   "meeting_method": "in_person",
+   "ask_topics": [
+    "資産運用に興味があるが、何から始めればいいか"
+   ],
+   "pre_question": "家を買ったあとの、毎月の貯め方を知りたい",
+   "created_at": "2026-11-12T05:28:07+09:00",
+   "status": "done",
+   "overdue": false,
+   "waiting_hours": null,
+   "source": {
+    "route": "own_story",
+    "story_id": 2,
+    "headline": "家は、買うときより買ったあとのお金の計画が大事でした。",
+    "writer_label": "あなた",
+    "writer_situation": null
+   },
+   "customer": {
+    "faculty": null,
+    "age_band": "30代前半",
+    "situations": [
+     "結婚したばかり",
+     "住宅を検討中"
+    ]
+   },
+   "story": {
+    "good_text": "ローンの返済額を、家賃ではなく「老後まで払い続けられる額」で考えたことです。教育費や修繕費も含めて、先にライフプランを書き出しました。",
+    "regret_text": "ローンの金利タイプや繰り上げ返済の仕組みを、もっと勉強してから決めればよかったことです。仕事で金融に関わっていたのに、自分のことになると勢いで決めてしまいました。",
+    "trigger_title": "30歳の秋",
+    "trigger_body": "家賃を払い続けるより、自分の資産になる家を持ちたいと考えたからです。",
+    "hesitation_title": "買うか、借りるか",
+    "hesitation_body": "毎月の返済を30年以上払い続けられるのか、結婚や転勤など今後の変化に耐えられるのかも気になりました。金融の仕事をしていても、自分のこととなると、金利タイプやいくらまで借りるかを決めるのに時間がかかりました。"
+   },
+   "decline_reason": null,
+   "share_result": true,
+   "result": {
+    "texts": [
+     "使い慣れた道具やいつもの習慣を大切にし、穏やかな時間を楽しむ。",
+     "条件や例外まで確認し、比べて納得してから決める。",
+     "将来に回す予定のお金でも、今の体験や大切な人との時間に使う選択をする。"
+    ],
+    "same_levels": 3,
+    "axes": 3
+   },
+   "proposals": [
+    {
+     "id": 6,
+     "starts_at": "2026-11-14T19:00:00+09:00",
+     "ends_at": "2026-11-14T19:30:00+09:00",
+     "method": "in_person",
+     "place": "福岡銀行 本店",
+     "chosen": true
+    }
+   ],
+   "record": {
+    "held": true,
+    "topics": [
+     "住まい・住宅ローン",
+     "家計の分け方"
+    ],
+    "next_promise": true,
+    "memo": "次は家計の表を見ながら話す",
+    "recorded_at": "2026-11-20T13:28:07+09:00"
+   }
+  },
+  {
+   "id": 8,
+   "requester_name": "たく",
+   "preferences": [],
+   "meeting_method": "online",
+   "ask_topics": [],
+   "pre_question": "定年までに返し終えるには、いつまでに買えばいいか気になった",
+   "created_at": "2026-11-09T17:28:07+09:00",
+   "status": "done",
+   "overdue": false,
+   "waiting_hours": null,
+   "source": {
+    "route": "graduate_story",
+    "story_id": 30,
+    "headline": "ローンは、定年の5年前に返し終えた",
+    "writer_label": "60代男性",
+    "writer_situation": "住宅ローンを完済"
+   },
+   "customer": {
+    "faculty": "商学部",
+    "age_band": "50代",
+    "situations": [
+     "住宅を検討中"
+    ]
+   },
+   "story": {
+    "good_text": "35歳で3,500万円の家を買い、定年の5年前に返し終えるよう繰り上げ返済を続けた。退職後の旅費を、いまから別にためられている。",
+    "regret_text": "金利が高い時期に借りたまま、借り換えを10年以上しなかった。比べていれば、数十万円は違ったと思う。",
+    "trigger_title": "34歳の春",
+    "trigger_body": "長女が生まれ、社宅を出る期限が近づいた。休日ごとに住宅展示場を回った。",
+    "hesitation_title": "退職金で返すか",
+    "hesitation_body": "定年まで払って退職金で返す手もあった。老後の手元を減らしたくなくて、早めに返すほうを選んだ。"
+   },
+   "decline_reason": null,
+   "share_result": true,
+   "result": {
+    "texts": [
+     "新しい体験に心が動く一方、落ち着く習慣も手放さない。",
+     "条件や例外まで確認し、比べて納得してから決める。",
+     "今使う前に将来分を先取りし、先の選択肢を少しずつ増やす。"
+    ],
+    "same_levels": 1,
+    "axes": 3
+   },
+   "proposals": [
+    {
+     "id": 7,
+     "starts_at": "2026-11-14T19:00:00+09:00",
+     "ends_at": "2026-11-14T19:30:00+09:00",
+     "method": "online",
+     "place": "",
+     "chosen": true
+    }
+   ],
+   "record": {
+    "held": true,
+    "topics": [
+     "住まい・住宅ローン"
+    ],
+    "next_promise": false,
+    "memo": "次は家計の表を見ながら話す",
+    "recorded_at": "2026-11-20T13:28:07+09:00"
+   }
+  },
+  {
+   "id": 9,
+   "requester_name": "みお",
+   "preferences": [
+    "平日の夜"
+   ],
+   "meeting_method": "online",
+   "ask_topics": [
+    "資産運用に興味があるが、何から始めればいいか"
+   ],
+   "pre_question": "",
+   "created_at": "2026-11-08T01:28:07+09:00",
+   "status": "done",
+   "overdue": false,
+   "waiting_hours": null,
+   "source": {
+    "route": "direct"
+   },
+   "customer": {
+    "faculty": "神学部",
+    "age_band": "20代後半",
+    "situations": [
+     "転職を考えている"
+    ]
+   },
+   "story": null,
+   "decline_reason": null,
+   "share_result": false,
+   "result": null,
+   "proposals": [
+    {
+     "id": 8,
+     "starts_at": "2026-11-14T19:00:00+09:00",
+     "ends_at": "2026-11-14T19:30:00+09:00",
+     "method": "online",
+     "place": "",
+     "chosen": true
+    }
+   ],
+   "record": {
+    "held": true,
+    "topics": [
+     "資産運用・NISA",
+     "貯め方"
+    ],
+    "next_promise": true,
+    "memo": "次は家計の表を見ながら話す",
+    "recorded_at": "2026-11-20T13:28:07+09:00"
+   }
+  }
+ ],
+ "decline_reasons": [
+  "日程が合わない",
+  "得意分野と合わない",
+  "受けられる件数を超えた",
+  "その他"
+ ],
+ "record_topics": [
+  "貯め方",
+  "家計の分け方",
+  "資産運用・NISA",
+  "住まい・住宅ローン",
+  "保険",
+  "結婚・2人のお金",
+  "子育て・教育",
+  "その他"
+ ],
+ "reply_target_days": 2,
+ "me": {
+  "profile": {
+   "id": 2,
+   "speaker_key": "ST0009",
+   "name": "森下由美",
+   "kind": "staff",
+   "photo_url": "/images/speakers/demo_ST0009.webp",
+   "one_liner": "「行きつけの店を守る。石橋を叩いてから決める。」",
+   "area": "筑後エリア",
+   "job_title": "家計・貯蓄相談",
+   "intro_text": "豪快に見えて几帳面と言われます。休日は走り慣れたコースをゆっくり楽しみ、気に入った道具は長く使います。条件や手順を確かめ、石橋を叩いてから動きます。将来に残す予定のお金を調整して、今の体験に使うこともあります。",
+   "personality_text": "人柄は豪快に見えて几帳面。日頃は「予定変更を楽しめる」という一面も。休日はスポーツ観戦やランニングを楽しみます。仕事では小さな約束も守ることを大切にしています。",
+   "faculty": "法学部",
+   "gender": "女性",
+   "situation_label": "家を買って3年",
+   "pattern": "--+",
+   "accepting": true,
+   "hidden_fields": []
+  },
+  "tags": [
+   {
+    "id": 1,
+    "kind": "specialty",
+    "name": "家計管理",
+    "selected": false
+   },
+   {
+    "id": 2,
+    "kind": "specialty",
+    "name": "貯蓄・積立",
+    "selected": false
+   },
+   {
+    "id": 3,
+    "kind": "specialty",
+    "name": "資産運用・NISA",
+    "selected": false
+   },
+   {
+    "id": 4,
+    "kind": "specialty",
+    "name": "住宅ローン",
+    "selected": false
+   },
+   {
+    "id": 5,
+    "kind": "specialty",
+    "name": "教育資金",
+    "selected": false
+   },
+   {
+    "id": 6,
+    "kind": "specialty",
+    "name": "結婚・出産",
+    "selected": true
+   },
+   {
+    "id": 7,
+    "kind": "specialty",
+    "name": "保険・保障",
+    "selected": false
+   },
+   {
+    "id": 8,
+    "kind": "specialty",
+    "name": "老後資金",
+    "selected": true
+   },
+   {
+    "id": 9,
+    "kind": "specialty",
+    "name": "相続・贈与",
+    "selected": false
+   },
+   {
+    "id": 10,
+    "kind": "specialty",
+    "name": "ライフプラン",
+    "selected": false
+   },
+   {
+    "id": 11,
+    "kind": "specialty",
+    "name": "借入・返済",
+    "selected": true
+   },
+   {
+    "id": 12,
+    "kind": "specialty",
+    "name": "起業・創業",
+    "selected": false
+   },
+   {
+    "id": 13,
+    "kind": "specialty",
+    "name": "個人事業・副業",
+    "selected": false
+   },
+   {
+    "id": 14,
+    "kind": "specialty",
+    "name": "事業承継",
+    "selected": false
+   },
+   {
+    "id": 15,
+    "kind": "specialty",
+    "name": "家族のお金",
+    "selected": false
+   },
+   {
+    "id": 16,
+    "kind": "private",
+    "name": "子育て中",
+    "selected": false
+   },
+   {
+    "id": 17,
+    "kind": "private",
+    "name": "新婚",
+    "selected": false
+   },
+   {
+    "id": 18,
+    "kind": "private",
+    "name": "一人暮らし",
+    "selected": false
+   },
+   {
+    "id": 19,
+    "kind": "private",
+    "name": "Uターン",
+    "selected": false
+   },
+   {
+    "id": 20,
+    "kind": "private",
+    "name": "犬好き",
+    "selected": false
+   },
+   {
+    "id": 21,
+    "kind": "private",
+    "name": "猫好き",
+    "selected": false
+   },
+   {
+    "id": 22,
+    "kind": "private",
+    "name": "サウナ",
+    "selected": false
+   },
+   {
+    "id": 23,
+    "kind": "private",
+    "name": "ランニング",
+    "selected": true
+   },
+   {
+    "id": 24,
+    "kind": "private",
+    "name": "ゴルフ",
+    "selected": true
+   },
+   {
+    "id": 25,
+    "kind": "private",
+    "name": "キャンプ",
+    "selected": false
+   },
+   {
+    "id": 26,
+    "kind": "private",
+    "name": "登山",
+    "selected": false
+   },
+   {
+    "id": 27,
+    "kind": "private",
+    "name": "釣り",
+    "selected": false
+   },
+   {
+    "id": 28,
+    "kind": "private",
+    "name": "旅行",
+    "selected": false
+   },
+   {
+    "id": 29,
+    "kind": "private",
+    "name": "温泉",
+    "selected": false
+   },
+   {
+    "id": 30,
+    "kind": "private",
+    "name": "グルメ",
+    "selected": false
+   },
+   {
+    "id": 31,
+    "kind": "private",
+    "name": "料理",
+    "selected": false
+   },
+   {
+    "id": 32,
+    "kind": "private",
+    "name": "お酒",
+    "selected": false
+   },
+   {
+    "id": 33,
+    "kind": "private",
+    "name": "カフェ巡り",
+    "selected": false
+   },
+   {
+    "id": 34,
+    "kind": "private",
+    "name": "音楽",
+    "selected": true
+   },
+   {
+    "id": 35,
+    "kind": "private",
+    "name": "映画",
+    "selected": false
+   },
+   {
+    "id": 36,
+    "kind": "private",
+    "name": "読書",
+    "selected": false
+   },
+   {
+    "id": 37,
+    "kind": "private",
+    "name": "ゲーム",
+    "selected": false
+   },
+   {
+    "id": 38,
+    "kind": "private",
+    "name": "推し活",
+    "selected": false
+   },
+   {
+    "id": 39,
+    "kind": "private",
+    "name": "スポーツ観戦",
+    "selected": true
+   }
+  ],
+  "tag_range": {
+   "specialty": [
+    2,
+    4
+   ],
+   "private": [
+    3,
+    5
+   ]
+  },
+  "story": {
+   "id": 2,
+   "headline": "家は、買うときより買ったあとのお金の計画が大事でした。",
+   "good_text": "ローンの返済額を、家賃ではなく「老後まで払い続けられる額」で考えたことです。教育費や修繕費も含めて、先にライフプランを書き出しました。",
+   "regret_text": "ローンの金利タイプや繰り上げ返済の仕組みを、もっと勉強してから決めればよかったことです。仕事で金融に関わっていたのに、自分のことになると勢いで決めてしまいました。",
+   "trigger_title": "30歳の秋",
+   "trigger_body": "家賃を払い続けるより、自分の資産になる家を持ちたいと考えたからです。",
+   "hesitation_title": "買うか、借りるか",
+   "hesitation_body": "毎月の返済を30年以上払い続けられるのか、結婚や転勤など今後の変化に耐えられるのかも気になりました。金融の仕事をしていても、自分のこととなると、金利タイプやいくらまで借りるかを決めるのに時間がかかりました。",
+   "qas": [
+    {
+     "question": "頭金はいくら入れた？",
+     "answer": "物件価格の1〜2割を目安に入れました。貯金を全部使わず、生活費の半年分は手元に残しました。"
+    },
+    {
+     "question": "一番役に立った相談先は？",
+     "answer": "同僚のファイナンシャルプランナーです。毎月の返済額の目安や、教育費・老後資金とのバランスを、数字で一緒に確認してもらえました。"
+    },
+    {
+     "question": "金利は変動と固定？",
+     "answer": "返済額が変わらない固定にしました。仕事で金利の動きを見ていたからこそ、将来の返済額を読めるほうが安心だと考えました。"
+    },
+    {
+     "question": "家購入を考えている人に一言",
+     "answer": "家は「買えるか」より、「買ったあとも払い続けられるか」で考えてください。"
+    }
+   ]
+  },
+  "story_draft": null,
+  "value_tags": [
+   "穏やか",
+   "納得",
+   "今を充実"
+  ],
+  "answered_count": 12
+ },
+ "questions": [
+  {
+   "id": 1,
+   "question_no": 1,
+   "episode_text": "アウェイ戦が遠くの街に決まった日、宿も決めないうちに飛行機を取りました。朝いちばんの便でも、苦になりません。",
+   "summary": "試合より先に飛行機を取る",
+   "source_label": "村上 一樹さんの話",
+   "answer": -1
+  },
+  {
+   "id": 2,
+   "question_no": 2,
+   "episode_text": "好きなミュージシャンの追加公演が決まると、その日の予定をぜんぶずらします。遠くても、行かなかった日のことを考えるほうが嫌なので。",
+   "summary": "追加公演が出たら予定を動かす",
+   "source_label": "鈴木 真由さんの話",
+   "answer": 0
+  },
+  {
+   "id": 3,
+   "question_no": 3,
+   "episode_text": "駅前に新しい花屋ができても、月に一度買う花は行きつけのお店で買います。どちらが良いか比較することはしません。",
+   "summary": "新しい花屋は、見にも行かない",
+   "source_label": "森下由美さんの話",
+   "answer": 1
+  },
+  {
+   "id": 4,
+   "question_no": 4,
+   "episode_text": "誕生日は、新しい店より近所の洋食屋。座ると「いつもの？」と聞かれるから、メニューはほとんど開かない。",
+   "summary": "誕生日も、近所の洋食屋",
+   "source_label": "中村 さくらさんの話",
+   "answer": 1
+  },
+  {
+   "id": 5,
+   "question_no": 5,
+   "episode_text": "部屋を広くしたいと思った日に、大きな本棚を買いました。どこに置くかは、届いてから考えました。",
+   "summary": "本棚を買ってから間取りを考えた",
+   "source_label": "高野直人さんの話",
+   "answer": -1
+  },
+  {
+   "id": 6,
+   "question_no": 6,
+   "episode_text": "マラソン大会の締切が今日だと知って、完走できるか考える前に申し込みました。申し込み後に練習計画を立てました。",
+   "summary": "締切の日に申し込んだ",
+   "source_label": "青山祐介さんの話",
+   "answer": 1
+  },
+  {
+   "id": 7,
+   "question_no": 7,
+   "episode_text": "洗濯機を見に行く日、置く場所の寸法を書いたメモを持っていきました。店員さんに「入りますよ」と言われても、メモを確認します。",
+   "summary": "寸法を三つメモして売場へ",
+   "source_label": "森下由美さんの話",
+   "answer": 1
+  },
+  {
+   "id": 8,
+   "question_no": 8,
+   "episode_text": "家族のスマホを替える前に、三社の料金を一枚の紙にまとめました。家族には「もう決めていい」と言われましたが、もう少し見ていました。",
+   "summary": "三社の料金を一枚の紙に",
+   "source_label": "村上 一樹さんの話",
+   "answer": 1
+  },
+  {
+   "id": 9,
+   "question_no": 9,
+   "episode_text": "好きなバンドの記念公演で、ステージに近い席を取りました。その月はずっと自炊しましたが、後悔はしていません。",
+   "summary": "その席は、今年しかない",
+   "source_label": "高野直人さんの話",
+   "answer": -1
+  },
+  {
+   "id": 10,
+   "question_no": 10,
+   "episode_text": "前から気になっていた店に、誕生日だから思い切って入りました。いつもより高価な一品でしたが、その月はそれで充分満足しました",
+   "summary": "気になっていた店に、誕生日に",
+   "source_label": "遠藤 美咲さんの話",
+   "answer": 1
+  },
+  {
+   "id": 11,
+   "question_no": 11,
+   "episode_text": "給料が入った日に、使わない分を先に別のところへ移します。移したお金は、その月はもう無いものとして数えています。",
+   "summary": "入った日に、よそへ移す",
+   "source_label": "青山祐介さんの話",
+   "answer": -1
+  },
+  {
+   "id": 12,
+   "question_no": 12,
+   "episode_text": "冷蔵庫が急に壊れて困った経験から、修理のためのお金を毎日貯めています。そのぶん毎月の外食は一回減りますが、戻すつもりはありません。",
+   "summary": "壊れていないうちから、よけておく",
+   "source_label": "鈴木 真由さんの話",
+   "answer": -1
+  }
+ ],
+ "insights": {
+  "enough": true,
+  "total": 10,
+  "min_people": 5,
+  "replied": 7,
+  "held": 3,
+  "next_promise": 2,
+  "ask_topics": [
+   {
+    "label": "漠然とした不安・もやもやを聞いてほしい",
+    "count": 3
+   },
+   {
+    "label": "資産運用に興味があるが、何から始めればいいか",
+    "count": 3
+   },
+   {
+    "label": "もっと他の事例も聞いてみたい",
+    "count": 1
+   }
+  ],
+  "talked_topics": [
+   {
+    "label": "住まい・住宅ローン",
+    "count": 2
+   },
+   {
+    "label": "家計の分け方",
+    "count": 1
+   },
+   {
+    "label": "資産運用・NISA",
+    "count": 1
+   },
+   {
+    "label": "貯め方",
+    "count": 1
+   }
+  ],
+  "preferences": [
+   {
+    "label": "平日の夜",
+    "count": 3
+   },
+   {
+    "label": "休日の午後",
+    "count": 2
+   },
+   {
+    "label": "休日の午前",
+    "count": 1
+   },
+   {
+    "label": "平日の午後",
+    "count": 1
+   }
+  ],
+  "methods": [
+   {
+    "label": "online",
+    "count": 7
+   },
+   {
+    "label": "in_person",
+    "count": 3
+   }
+  ],
+  "situations": [
+   {
+    "label": "住宅を検討中",
+    "count": 6
+   },
+   {
+    "label": "結婚したばかり",
+    "count": 3
+   },
+   {
+    "label": "結婚を考え始めた",
+    "count": 1
+   },
+   {
+    "label": "子どもが生まれる",
+    "count": 1
+   },
+   {
+    "label": "転職を考えている",
+    "count": 1
+   },
+   {
+    "label": "その他",
+    "count": 1
+   }
+  ],
+  "routes": [
+   {
+    "label": "あなたの経験談を読んで",
+    "count": 5
+   },
+   {
+    "label": "卒業生の経験談から",
+    "count": 4
+   },
+   {
+    "label": "経験談を通らずに",
+    "count": 1
+   }
+  ],
+  "age_bands": [
+   {
+    "label": "30代前半",
+    "count": 3
+   },
+   {
+    "label": "20代後半",
+    "count": 2
+   },
+   {
+    "label": "30代後半",
+    "count": 2
+   },
+   {
+    "label": "40代前半",
+    "count": 1
+   },
+   {
+    "label": "40代後半",
+    "count": 1
+   },
+   {
+    "label": "50代",
+    "count": 1
+   }
+  ],
+  "shared_count": 7,
+  "axes": [
+   {
+    "code": "L",
+    "levels": [
+     {
+      "level": -1,
+      "label": "穏やか",
+      "count": 5
+     },
+     {
+      "level": 0,
+      "label": "バランス",
+      "count": 2
+     },
+     {
+      "level": 1,
+      "label": "刺激",
+      "count": 0
+     }
+    ]
+   },
+   {
+    "code": "C",
+    "levels": [
+     {
+      "level": -1,
+      "label": "納得",
+      "count": 5
+     },
+     {
+      "level": 0,
+      "label": "バランス",
+      "count": 2
+     },
+     {
+      "level": 1,
+      "label": "行動",
+      "count": 0
+     }
+    ]
+   },
+   {
+    "code": "M",
+    "levels": [
+     {
+      "level": -1,
+      "label": "備える",
+      "count": 1
+     },
+     {
+      "level": 0,
+      "label": "バランス",
+      "count": 2
+     },
+     {
+      "level": 1,
+      "label": "今を充実",
+      "count": 4
+     }
+    ]
+   }
+  ]
+ },
+ "insights_min_people": 5,
+ "scoring": {
+  "axes": [
+   "L",
+   "C",
+   "M"
+  ],
+  "questions": [
+   {
+    "id": 1,
+    "axis": "L",
+    "direction": 1
+   },
+   {
+    "id": 2,
+    "axis": "L",
+    "direction": 1
+   },
+   {
+    "id": 3,
+    "axis": "L",
+    "direction": -1
+   },
+   {
+    "id": 4,
+    "axis": "L",
+    "direction": -1
+   },
+   {
+    "id": 5,
+    "axis": "C",
+    "direction": 1
+   },
+   {
+    "id": 6,
+    "axis": "C",
+    "direction": 1
+   },
+   {
+    "id": 7,
+    "axis": "C",
+    "direction": -1
+   },
+   {
+    "id": 8,
+    "axis": "C",
+    "direction": -1
+   },
+   {
+    "id": 9,
+    "axis": "M",
+    "direction": 1
+   },
+   {
+    "id": 10,
+    "axis": "M",
+    "direction": 1
+   },
+   {
+    "id": 11,
+    "axis": "M",
+    "direction": -1
+   },
+   {
+    "id": 12,
+    "axis": "M",
+    "direction": -1
+   }
+  ],
+  "thresholds": {
+   "plus_min": 2,
+   "minus_max": -2
+  },
+  "labels": {
+   "C": {
+    "0": "バランス",
+    "1": "行動",
+    "-1": "納得"
+   },
+   "L": {
+    "0": "バランス",
+    "1": "刺激",
+    "-1": "穏やか"
+   },
+   "M": {
+    "0": "バランス",
+    "1": "今を充実",
+    "-1": "備える"
+   }
+  }
+ }
+}
